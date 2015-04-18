@@ -48,6 +48,7 @@ Thumbs.db
 # Java Specific Stuff #
 #######################
 *.class
+*.ctxt
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
