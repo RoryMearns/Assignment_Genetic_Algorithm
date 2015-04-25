@@ -76,12 +76,53 @@ function Creature (locationX, locationY) {
 			return true;
 		} else {return false;}
 	}
+
 	this.mushroom_present = function () {
 		if (mushroom_array[this.locationX][this.locationY] > 0) {
 			return true;
 		} else {return false;}
 	}
-	this.nearest_strawb = function () {}
+
+	this.nearest_strawb = function () {
+		// Check neighborhood:
+		// ...first check the squares immediately adjacent:
+		for (var i=this.locationX-1; i<i+3; i++) {
+			for (var j=this.locationY-1; j<j+3; j++) {
+				if (strab_array[i][j]>0) {
+					
+					if (i<this.locationX) {
+						return "west";
+					}
+					else if (i>this.locationX) {
+						return "east";
+					}
+					else if (j<this.locationY) {
+						return "north";
+					} else {return "south"}
+
+				}
+			}
+		}
+
+		// ...if there is nothing immediately adjacent, check the next step out:
+		for (var i=this.locationX-2; i<i+5; i++) {
+			for (var j=this.locationY-2; j<j+5; j++) {
+				if (strab_array[i][j]>0) {
+					
+					if (i<this.locationX) {
+						return "west";
+					}
+					else if (i>this.locationX) {
+						return "east";
+					}
+					else if (j<this.locationY) {
+						return "north";
+					} else {return "south"}
+
+				}
+			}
+		}
+	}
 	this.nearest_mushroom = function () {}
 	this.nearest_monster = function () {}
 	this.nearest_creature = function () {}
