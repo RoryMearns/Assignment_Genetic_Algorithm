@@ -3,7 +3,7 @@
 /* ---- World Variables & Data Structures ---- */
 // Timing
 var timestep = 0;					// the 'world clock'
-var total_frames = 20;				// how many times to run the program
+var total_frames = 0;				// how many times to run the program
 var wait;							// how long to wait between timesteps for possible animation
 
 // Drawing
@@ -30,6 +30,7 @@ var monsters_location_array = new Array(world_width_cells);		// 2D array of all 
 var chance_of_strawb = 0.03;									// the chance of any one cell containing a strawberry
 var chance_of_mush = 0.03;										// the chance of any one cell containing a mushroom
 var max_strawb = 6;												// the highest number of food any one strawberry tile can contain
+var max_mushroom = 6;											// the highest number of food any one mushroom tile can contain	
 
 // Creature info:
 var start_energy = 5;											// how much energy each creature starts with
@@ -86,9 +87,9 @@ function Creature (locationX, locationY) {
 	this.nearest_strawb = function () {
 		// Check neighborhood:
 		// ...first check the squares immediately adjacent:
-		for (var i=this.locationX-1; i<this.locationX+2; i++) {
-			for (var j=this.locationY-1; j<this.locationY+2; j++) {
-				if (strawb_array != undefined && strawb_array[i][j]>0) {
+		for (var i=Math.max(this.locationX-1, 0); i<=Math.min(this.locationX+1, strawb_array.length-1); i++) {
+			for (var j=Math.max(this.locationY-1, 0); j<=Math.min(this.locationY+1, strawb_array[0].length-1); j++) {
+				if (strawb_array[i][j]>0) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -104,8 +105,8 @@ function Creature (locationX, locationY) {
 			}
 		}
 		// ...if there is nothing immediately adjacent, check the next step out:
-		for (var i=this.locationX-2; i<this.locationX+3; i++) {
-			for (var j=this.locationY-2; j<this.locationY+3; j++) {
+		for (var i=Math.max(this.locationX-2, 0); i<=Math.min(this.locationX+2, strawb_array.length-1); i++) {
+			for (var j=Math.max(this.locationY-2, 0); j<=Math.min(this.locationY+2, strawb_array[0].length-1); j++) {
 				if (strawb_array[i][j]>0) {
 					
 					if (i<this.locationX) {
@@ -122,13 +123,13 @@ function Creature (locationX, locationY) {
 			}
 		}
 	}
-	
+
 	this.nearest_mushroom = function () {
 		// Check neighborhood:
 		// ...first check the squares immediately adjacent:
-		for (var i=this.locationX-1; i<this.locationX+2; i++) {
-			for (var j=this.locationY-1; j<this.locationY+2; j++) {
-				if (mushroom_array != undefined && mushroom_array[i][j]>0) {
+		for (var i=Math.max(this.locationX-1, 0); i<=Math.min(this.locationX+1, mushroom_array.length-1); i++) {
+			for (var j=Math.max(this.locationY-1, 0); j<=Math.min(this.locationY+1, mushroom_array[0].length-1); j++) {
+				if (mushroom_array[i][j]>0) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -144,9 +145,9 @@ function Creature (locationX, locationY) {
 			}
 		}
 		// ...if there is nothing immediately adjacent, check the next step out:
-		for (var i=this.locationX-2; i<this.locationX+3; i++) {
-			for (var j=this.locationY-2; j<this.locationY+3; j++) {
-				if (mushroom_array != undefined && mushroom_array[i][j]>0) {
+		for (var i=Math.max(this.locationX-2, 0); i<=Math.min(this.locationX+2, mushroom_array.length-1); i++) {
+			for (var j=Math.max(this.locationY-2, 0); j<=Math.min(this.locationY+2, mushroom_array.length-1); j++) {
+				if (mushroom_array[i][j]>0) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -166,9 +167,9 @@ function Creature (locationX, locationY) {
 	this.nearest_monster = function () {
 		// Check neighborhood:
 		// ...first check the squares immediately adjacent:
-		for (var i=this.locationX-1; i<this.locationX+2; i++) {
-			for (var j=this.locationY-1; j<this.locationY+2; j++) {
-				if (monsters_location_array != undefined && monsters_location_array[i][j]>0) {
+		for (var i=Math.max(this.locationX-1, 0); i<=Math.min(this.locationX+1, monsters_location_array.length-1); i++) {
+			for (var j=Math.max(this.locationY-1, 0); j<=Math.min(this.locationY+1, monsters_location_array.length-1); j++) {
+				if (monsters_location_array[i][j]>0) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -184,9 +185,9 @@ function Creature (locationX, locationY) {
 			}
 		}
 		// ...if there is nothing immediately adjacent, check the next step out:
-		for (var i=this.locationX-2; i<this.locationX+3; i++) {
-			for (var j=this.locationY-2; j<this.locationY+3; j++) {
-				if (monsters_location_array != undefined && monsters_location_array[i][j]>0) {
+		for (var i=Math.max(this.locationX-2, 0); i<=Math.min(this.locationX+2, monsters_location_array.length-1); i++) {
+			for (var j=Math.max(this.locationY-2, 0); j<=Math.min(this.locationY+2, monsters_location_array.length-1); j++) {
+				if (monsters_location_array[i][j]>0) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -206,9 +207,9 @@ function Creature (locationX, locationY) {
 	this.nearest_creature = function () {
 		// Check neighborhood:
 		// ...first check the squares immediately adjacent:
-		for (var i=this.locationX-1; i<this.locationX+2; i++) {
-			for (var j=this.locationY-1; j<this.locationY+2; j++) {
-				if (creatures_location_array != undefined && creatures_location_array[i][j]>0) {
+		for (var i=Math.max(this.locationX-1, 0); i<=Math.min(this.locationX+1, creatures_location_array.length-1); i++) {
+			for (var j=Math.max(this.locationY-1, 0); j<=Math.min(this.locationY+1, creatures_location_array.length-1); j++) {
+				if (creatures_location_array[i][j]>0) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -224,9 +225,9 @@ function Creature (locationX, locationY) {
 			}
 		}
 		// ...if there is nothing immediately adjacent, check the next step out:
-		for (var i=this.locationX-2; i<this.locationX+3; i++) {
-			for (var j=this.locationY-2; j<this.locationY+3; j++) {
-				if (creatures_location_array != undefined && creatures_location_array[i][j]>0) {
+		for (var i=Math.max(this.locationX-2, 0); i<=Math.min(this.locationX+2, creatures_location_array.length-1); i++) {
+			for (var j=Math.max(this.locationY-2, 0); j<=Math.min(this.locationY+2, creatures_location_array.length-1); j++) {
+				if (creatures_location_array[i][j]>0) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -245,7 +246,14 @@ function Creature (locationX, locationY) {
 
 	// Actions:
 	this.move = function () {}
-	this.eat = function () {}	
+	this.eat = function (food_type) {
+		if (food_type == "strawberry") {
+			strawb_array[this.locationX][this.locationY]--;
+		} 
+		else if (food_type == "mushroom") {
+			mushroom_array[this.locationX][this.locationY]--;
+		}
+	}	
 	this.select_action = function () {}
 }
 
@@ -335,7 +343,7 @@ var initialise = function () {
 				mushroom_array[i][j] = 0;
 			}
 			else if (rand>(1-chance_of_mush)) {
-				mushroom_array[i][j] = 1;
+				mushroom_array[i][j] = Math.floor(Math.random() * max_mushroom) + 1;
 				strawb_array[i][j] = 0;
 			} else {
 				mushroom_array[i][j] = 0;
@@ -400,6 +408,10 @@ var reset = function () {
 var main = function () {
 	render();
 	console.log(creatures_array[0].nearest_mushroom());
+	console.log(creatures_array[1].nearest_mushroom());
+	console.log(creatures_array[2].nearest_mushroom());
+	console.log(creatures_array[3].nearest_mushroom());
+	console.log(creatures_array[4].nearest_mushroom());
 
 	
 	timestep++;
