@@ -1,10 +1,18 @@
 /* COSC 343 Assignment 2 - Genetic Algorithm. Rory Mearns, ID.3928873, 25/4/2015 */
 
 /* ---- World Variables & Data Structures ---- */
+// Timing
 var timestep;						// the 'world clock'
 var wait;							// how long to wait between timesteps for possible animation
-var world_width;					// world width in number of cells 
-var world_height;					// world height in number of cells
+
+// Drawing
+var world_width_cells = 20;			// world width in number of cells 
+var world_height_cells = 20;		// world height in number of cells
+var block_size = 10;				// how big a 'cell' is in pixels on the screen
+var world_width_pixels = world_width_cells*block_size;		// world width in number of pixels 
+var world_height_pixels = world_width_cells*block_size;		// world height in number of pixels
+
+// Data
 var strab_array = [];				// 2D location array, each cell contains a number indicating the quantity of food
 var mushroom_array = [];			// 2D location array, each cell contains a number indicating the quantity of food
 var creatures_array = [];			// 1D array of all the creatures
@@ -12,53 +20,73 @@ var creatures_location_array = [];	// 2D array of all the creatures locations
 var monsters_array = [];			// 1D array of all the monsters
 var monsters_location_array = [];	// 2D array of all the monsters locations
 
+/* ---- Canvas Element ---- */
+var canvas = document.createElement("canvas");
+var context = canvas.getContext("2d");
+canvas.width = world_width_pixels;
+canvas.height = world_height_pixels;
+document.body.appendChild(canvas);
+
 /* ---- Creatures ---- */
-Creatures.prototype = {
+function Creature () {
+
 	// States & Variables:
-	var location;
-	var energy_level;
-	var actions_list = [];
+	this.location = 0;
+	this.energy_level = 0;
+	this.actions_list = [];
 
 	// Chromosome:
-	chromosome = [];
+	this.chromosome = [];
 
 	// Sensory Functions:
-	strab_present = function () {}
-	mushroom_present = function () {}
-	nearest_strawb = function () {}
-	nearest_mushroom = function () {}
-	nearest_monster = function () {}
-	nearest_creature = function () {}
+	this.strawb_present = function () {}
+	this.mushroom_present = function () {}
+	this.nearest_strawb = function () {}
+	this.nearest_mushroom = function () {}
+	this.nearest_monster = function () {}
+	this.nearest_creature = function () {}
 
 	// Actions:
-	move = function () {}
-	eat = function () {}	
-	select_action = function () {}
-};
+	this.move = function () {}
+	this.eat = function () {}	
+	this.select_action = function () {}
+}
 
 /* ---- Monsters ---- */
-Monsters.prototype = {
+function Monster () {
+
 	// States:
-	var location;
+	this.location = 0;
 
 	// Sensory Functions:
-	nearest_creature = function () {}
+	this.nearest_creature = function () {}
 
 	// Actions:
-	move = function () {}
-	select_action = function () {}
-};
+	this.move = function () {}
+	this.select_action = function () {}
+}
 
 /* ---- Mushrooms ---- */
-Mushrooms.prototype = {
+//Mushrooms.prototype = {};
+
+/* ---- Strawberries ---- */
+
+/* ---- Draw Everything ---- */
+var render = function () {
+};
+
+/* ---- Program Funcitons ---- */
+var reset = function () {
 
 };
 
-/* ---- Strawberries ---- */
-Strawberries.prototype = {
+var main = function () {
+	console.log("Mic check, one, two...");	
+};
 
-};	
-
+/* ---- Running the Program ---- */
+reset();
+main();
 
 /* --------------- Objects & Classes in the World --------------- */
 
@@ -68,7 +96,7 @@ Strawberries.prototype = {
 	location:
 	sense: 	detect monsters and food in their local neighbourhood
 			can tell it things about the current square or it's neighbourhood.
-			- strab_present (bool) indicating the presence/absence of strawberries at current location
+			- strawb_present (bool) indicating the presence/absence of strawberries at current location
 			- mushroom_present (bool) indicating the presence/absence of mushrooms at current location
 			- nearest_strawb ('n' 'e' 's' 'w') indicating the direction towards the nearst strawb in current neighbourhood
 			- nearest_mushroom
