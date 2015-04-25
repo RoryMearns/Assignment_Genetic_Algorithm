@@ -6,16 +6,15 @@ var timestep;						// the 'world clock'
 var wait;							// how long to wait between timesteps for possible animation
 
 // Drawing
-var world_width_cells = 40;			// world width in number of cells 
+var world_width_cells = 80;			// world width in number of cells 
 var world_height_cells = 20;		// world height in number of cells
 var block_size = 10;				// how big a 'cell' is in pixels on the screen
 var world_width_pixels = world_width_cells*block_size;		// world width in number of pixels 
-var world_height_pixels = world_height_cells*block_size;		// world height in number of pixels
+var world_height_pixels = world_height_cells*block_size;	// world height in number of pixels
 var creature_color = "#50B3FA";		// color of creatures: blue
 var monster_color = "#19B319";		// color of monsters: green
 var strawberry_color = "#ED3E6F";	// color of strawberries: red
 var mushroom_color = "#8F6353";		// color of mushrooms: brown
-
 
 // Data
 var strawb_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
@@ -29,10 +28,14 @@ var monsters_location_array = new Array(world_width_cells);		// 2D array of all 
 var chance_of_strawb = 0.05;									// the chance of any one cell containing a strawberry
 var chance_of_mush = 0.05;										// the chance of any one cell containing a mushroom
 var max_strawb = 6;												// the highest number of food any one strawberry tile can contain
+
+// Creature info:
 var start_energy = 5;											// how much energy each creature starts with
+var eat_actions = ["eat","ignore"];								// for building the chromosomes
+var move_actions = ["towards", "away from", "random", "ignore"];			// for building the chromosomes
+var default_move_actions = ["random", "north", "east", "south", "west"];	// for building the chromosomes
 
-
-/* ---- Canvas Element ---- */
+// Canvas
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = world_width_pixels;
@@ -51,6 +54,20 @@ function Creature (locationX, locationY) {
 
 	// Chromosome:
 	this.chromosome = new Array(13);
+	this.chromosome[0] = eat_actions[Math.floor(Math.random() * 2)];
+	this.chromosome[1] = eat_actions[Math.floor(Math.random() * 2)];
+	this.chromosome[2] = move_actions[Math.floor(Math.random() * 4)];
+	this.chromosome[3] = move_actions[Math.floor(Math.random() * 4)];
+	this.chromosome[4] = move_actions[Math.floor(Math.random() * 4)];
+	this.chromosome[5] = move_actions[Math.floor(Math.random() * 4)];
+	this.chromosome[6] = default_move_actions[Math.floor(Math.random() * 5)];
+	//this.chromosome[7] = ;
+	//this.chromosome[8] = ;
+	//this.chromosome[9] = ;	
+	//this.chromosome[10] = ;
+	//this.chromosome[11] = ;
+	//this.chromosome[12] = ;
+	//this.chromosome[13] = ;
 
 	// Sensory Functions:
 	this.strawb_present = function () {}
@@ -201,7 +218,7 @@ var reset = function () {
 };
 
 var main = function () {
-	console.log(strawb_array[3][4]);
+	console.log(default_move_actions[Math.floor(Math.random() * 5)]);
 	render();	
 };
 
@@ -236,13 +253,13 @@ main();
 				increasing it's energy level by some amount (greater than the energy required to eat). 
 				eating a unit of mushroom decreases it's energy to 0 (kills it).
 	chromosome:	13 position in the chromosome, first 6 map to the 6 sensory functions:
-			1 - action on 'strawb_present'		- eat/ignore
-			2 - action on 'mushroom_present'	- eat/ignore
-			3 - action on 'nearst_strawb'		- towards/away_from/random/ignore
-			4 - action on 'nearest_mushroom'	- towards/away_from/random/ignore
-			5 - action on 'nearest_monster'		- towards/away_from/random/ignore
-			6 - action on 'nearest_creature'	- towards/away_from/random/ignore
-			7 - default action					- random/north/east/south/west
+			1[0] - action on 'strawb_present'		- eat/ignore
+			2[1] - action on 'mushroom_present'		- eat/ignore
+			3[2] - action on 'nearst_strawb'		- towards/away_from/random/ignore
+			4[3] - action on 'nearest_mushroom'		- towards/away_from/random/ignore
+			5[4] - action on 'nearest_monster'		- towards/away_from/random/ignore
+			6[5] - action on 'nearest_creature'		- towards/away_from/random/ignore
+			7[6] - default action					- random/north/east/south/west
 			8-13 specify weights for actions 1-6 to determine what to do if multiple actions are activated.
 			*/
 

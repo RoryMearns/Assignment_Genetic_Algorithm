@@ -1,3 +1,14 @@
+h1 {
+	text-align: center;
+}
+
+p {
+	text-align: center;
+}
+
 canvas {
 	border: black 1px solid;
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
 }
