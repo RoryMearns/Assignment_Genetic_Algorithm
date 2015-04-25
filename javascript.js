@@ -1,26 +1,66 @@
-/* --------------- Objects & Classes in the World --------------- */
+/* COSC 343 Assignment 2 - Genetic Algorithm. Rory Mearns, ID.3928873, 25/4/2015 */
 
+/* ---- World Variables & Data Structures ---- */
+var timestep;						// the 'world clock'
+var wait;							// how long to wait between timesteps for possible animation
+var world_width;					// world width in number of cells 
+var world_height;					// world height in number of cells
+var strab_array = [];				// 2D location array, each cell contains a number indicating the quantity of food
+var mushroom_array = [];			// 2D location array, each cell contains a number indicating the quantity of food
+var creatures_array = [];			// 1D array of all the creatures
+var creatures_location_array = [];	// 2D array of all the creatures locations
+var monsters_array = [];			// 1D array of all the monsters
+var monsters_location_array = [];	// 2D array of all the monsters locations
+
+/* ---- Creatures ---- */
 Creatures.prototype = {
+	// States & Variables:
+	var location;
+	var energy_level;
+	var actions_list = [];
+
+	// Chromosome:
+	chromosome = [];
+
+	// Sensory Functions:
 	strab_present = function () {}
 	mushroom_present = function () {}
 	nearest_strawb = function () {}
 	nearest_mushroom = function () {}
 	nearest_monster = function () {}
 	nearest_creature = function () {}
+
+	// Actions:
+	move = function () {}
+	eat = function () {}	
+	select_action = function () {}
 };
 
-
+/* ---- Monsters ---- */
 Monsters.prototype = {
+	// States:
+	var location;
 
+	// Sensory Functions:
+	nearest_creature = function () {}
+
+	// Actions:
+	move = function () {}
+	select_action = function () {}
 };
 
+/* ---- Mushrooms ---- */
 Mushrooms.prototype = {
 
 };
 
+/* ---- Strawberries ---- */
 Strawberries.prototype = {
 
 };	
+
+
+/* --------------- Objects & Classes in the World --------------- */
 
 // Creatures:
 /* The creatures that will evolve. Each creature contains a 'state', 'sense', 'action', 'chromosome'
