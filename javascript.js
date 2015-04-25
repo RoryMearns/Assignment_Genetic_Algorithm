@@ -61,13 +61,12 @@ function Creature (locationX, locationY) {
 	this.chromosome[4] = move_actions[Math.floor(Math.random() * 4)];
 	this.chromosome[5] = move_actions[Math.floor(Math.random() * 4)];
 	this.chromosome[6] = default_move_actions[Math.floor(Math.random() * 5)];
-	//this.chromosome[7] = ;
-	//this.chromosome[8] = ;
-	//this.chromosome[9] = ;	
-	//this.chromosome[10] = ;
-	//this.chromosome[11] = ;
-	//this.chromosome[12] = ;
-	//this.chromosome[13] = ;
+	this.chromosome[7] = Math.floor(Math.random() * 10) + 1;					// will be an int between 1-10
+	this.chromosome[8] = Math.floor(Math.random() * 10) + 1;
+	this.chromosome[9] = Math.floor(Math.random() * 10) + 1;	
+	this.chromosome[10] = Math.floor(Math.random() * 10) + 1;
+	this.chromosome[11] = Math.floor(Math.random() * 10) + 1;
+	this.chromosome[12] = Math.floor(Math.random() * 10) + 1;
 
 	// Sensory Functions:
 	this.strawb_present = function () {}
@@ -218,7 +217,7 @@ var reset = function () {
 };
 
 var main = function () {
-	console.log(default_move_actions[Math.floor(Math.random() * 5)]);
+	console.log(Math.floor(Math.random() * 10) + 1);
 	render();	
 };
 
