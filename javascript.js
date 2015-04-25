@@ -1,5 +1,27 @@
 /* --------------- Objects & Classes in the World --------------- */
 
+Creatures.prototype = {
+	strab_present = function () {}
+	mushroom_present = function () {}
+	nearest_strawb = function () {}
+	nearest_mushroom = function () {}
+	nearest_monster = function () {}
+	nearest_creature = function () {}
+};
+
+
+Monsters.prototype = {
+
+};
+
+Mushrooms.prototype = {
+
+};
+
+Strawberries.prototype = {
+
+};	
+
 // Creatures:
 /* The creatures that will evolve. Each creature contains a 'state', 'sense', 'action', 'chromosome'
 	state: 	energy_level: decremented by some small value each timestep, if it reaches 0 it's dead
