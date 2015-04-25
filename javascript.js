@@ -20,7 +20,7 @@ var mushroom_color = "#8F6353";		// color of mushrooms: brown
 // Data
 var strawb_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
 var mushroom_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
-var num_creatures = 10;											// number of creatures in the world
+var num_creatures = 5;											// number of creatures in the world
 var creatures_array = new Array(num_creatures);					// 1D array of all the creatures
 var creatures_location_array = new Array(world_width_cells);	// 2D array of all the creatures locations
 var num_monsters = 5;											// number of monsters in the world
@@ -29,6 +29,8 @@ var monsters_location_array = new Array(world_width_cells);		// 2D array of all 
 var chance_of_strawb = 0.05;									// the chance of any one cell containing a strawberry
 var chance_of_mush = 0.05;										// the chance of any one cell containing a mushroom
 var max_strawb = 6;												// the highest number of food any one strawberry tile can contain
+var start_energy = 5;											// how much energy each creature starts with
+
 
 /* ---- Canvas Element ---- */
 var canvas = document.createElement("canvas");
@@ -39,15 +41,16 @@ document.body.appendChild(canvas);
 
 
 /* ---- Creatures ---- */
-function Creature () {
+function Creature (locationX, locationY) {
 
 	// States & Variables:
-	this.location = 0;
-	this.energy_level = 0;
+	this.locationX = locationX;
+	this.locationY = locationY;
+	this.energy_level = start_energy;
 	this.actions_list = [];
 
 	// Chromosome:
-	this.chromosome = [];
+	this.chromosome = new Array(13);
 
 	// Sensory Functions:
 	this.strawb_present = function () {}
@@ -100,13 +103,26 @@ var render = function () {
 		}
 	}
 
+	// draw the creatures on the map:
+	for (var i=0; i<world_width_cells; i++) {
+		for (var j=0; j<world_height_cells; j++) {
+			var x = i*block_size;
+			var y = j*block_size;
+
+			if (creatures_location_array[i][j] == 1) {
+				ctx.fillStyle = creature_color;
+				ctx.fillRect(x, y, block_size, block_size);
+			}
+		}
+	}
+
 	// draw the monsters on the map:
 	for (var i=0; i<world_width_cells; i++) {
 		for (var j=0; j<world_height_cells; j++) {
 			var x = i*block_size;
 			var y = j*block_size;
 
-		if (monsters_location_array[i][j] == 1) {
+			if (monsters_location_array[i][j] == 1) {
 				ctx.fillStyle = monster_color;
 				ctx.fillRect(x, y, block_size, block_size);
 			}
@@ -148,22 +164,34 @@ var initialise = function () {
 	}
 
 	// fill creatures_array
-
-
-	// fill monsters_array
-	
-
-	for (var i=0; i<num_monsters; i++) {
-		monsters_location_array[i] = new Array(world_height_cells);
+	for (var i=0; i<num_creatures; i++) {
 		// find a random location in the 2D array:
 		var x = Math.floor(Math.random() * world_width_cells);
 		var y = Math.floor(Math.random() * world_height_cells);
 
-		if(monsters_location_array[x][y] == undefined){
-			monsters_array[i] = new Monster(x,y);
-			monsters_location_array[x][y] = 1;
+		if (creatures_location_array[x][y] == undefined) {
+			creatures_array[i] = new Creature(x,y);
+			creatures_location_array[x][y] = 1;
+		} else {
+			i--;
 		}
 	}
+
+	// fill monsters_array:
+	for (var i=0; i<num_monsters; i++) {
+		// find a random location in the 2D array:
+		var x = Math.floor(Math.random() * world_width_cells);
+		var y = Math.floor(Math.random() * world_height_cells);
+
+		if (monsters_location_array[x][y] == undefined){
+			monsters_array[i] = new Monster(x,y);
+			monsters_location_array[x][y] = 1;
+		} else { 
+			i--;
+		}
+	}
+
+	// Check for any immediate collisions:
 
 };
 
@@ -216,7 +244,7 @@ main();
 			6 - action on 'nearest_creature'	- towards/away_from/random/ignore
 			7 - default action					- random/north/east/south/west
 			8-13 specify weights for actions 1-6 to determine what to do if multiple actions are activated.
-*/
+			*/
 
 // Monsters: Basic 'zombies'. Each monster contains a 'state' (location). Slower than creatures (move once every F timesteps)
 //								They move towards the nearest creature, or at random.
