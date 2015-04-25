@@ -6,11 +6,11 @@ var timestep;						// the 'world clock'
 var wait;							// how long to wait between timesteps for possible animation
 
 // Drawing
-var world_width_cells = 20;			// world width in number of cells 
+var world_width_cells = 40;			// world width in number of cells 
 var world_height_cells = 20;		// world height in number of cells
 var block_size = 10;				// how big a 'cell' is in pixels on the screen
 var world_width_pixels = world_width_cells*block_size;		// world width in number of pixels 
-var world_height_pixels = world_width_cells*block_size;		// world height in number of pixels
+var world_height_pixels = world_height_cells*block_size;		// world height in number of pixels
 var creature_color = "#50B3FA";		// color of creatures: blue
 var monster_color = "#19B319";		// color of monsters: green
 var strawberry_color = "#ED3E6F";	// color of strawberries: red
@@ -26,8 +26,8 @@ var creatures_location_array = new Array(world_width_cells);	// 2D array of all 
 var num_monsters = 5;											// number of monsters in the world
 var monsters_array = new Array(num_monsters);					// 1D array of all the monsters
 var monsters_location_array = new Array(world_width_cells);		// 2D array of all the monsters locations
-var chance_of_strawb = 0.08;									// the chance of any one cell containing a strawberry
-var chance_of_mush = 0.08;										// the chance of any one cell containing a mushroom
+var chance_of_strawb = 0.05;									// the chance of any one cell containing a strawberry
+var chance_of_mush = 0.05;										// the chance of any one cell containing a mushroom
 var max_strawb = 6;												// the highest number of food any one strawberry tile can contain
 
 /* ---- Canvas Element ---- */
@@ -65,10 +65,11 @@ function Creature () {
 
 
 /* ---- Monsters ---- */
-function Monster () {
+function Monster (locationX, locationY) {
 
 	// States:
-	this.location = 0;
+	this.locationX = locationX;
+	this.locationY = locationY;
 
 	// Sensory Functions:
 	this.nearest_creature = function () {}
@@ -79,21 +80,8 @@ function Monster () {
 }
 
 
-/* ---- Mushrooms ---- */
-function Mushroom () {
-
-}
-
-
-/* ---- Strawberries ---- */
-function Strawberry () {
-
-}
-
-
 /* ---- Draw Everything ---- */
 var render = function () {
-	//ctx.fillRect(10, 10, block_size, block_size);
 
 	// draw the strawberry & mushroom map:
 	for (var i=0; i<world_width_cells; i++) {
@@ -107,6 +95,19 @@ var render = function () {
 			}
 			if (mushroom_array[i][j]>0) {
 				ctx.fillStyle = mushroom_color;
+				ctx.fillRect(x, y, block_size, block_size);
+			}
+		}
+	}
+
+	// draw the monsters on the map:
+	for (var i=0; i<world_width_cells; i++) {
+		for (var j=0; j<world_height_cells; j++) {
+			var x = i*block_size;
+			var y = j*block_size;
+
+		if (monsters_location_array[i][j] == 1) {
+				ctx.fillStyle = monster_color;
 				ctx.fillRect(x, y, block_size, block_size);
 			}
 		}
@@ -140,9 +141,30 @@ var initialise = function () {
 		}
 	}
 
-	// fill monsters_array
+	// Create sparse array of monster and creature locations:
+	for (var i=0; i<world_width_cells; i++) {
+		monsters_location_array[i] = new Array(world_height_cells);
+		creatures_location_array[i] = new Array(world_height_cells);
+	}
 
 	// fill creatures_array
+
+
+	// fill monsters_array
+	
+
+	for (var i=0; i<num_monsters; i++) {
+		monsters_location_array[i] = new Array(world_height_cells);
+		// find a random location in the 2D array:
+		var x = Math.floor(Math.random() * world_width_cells);
+		var y = Math.floor(Math.random() * world_height_cells);
+
+		if(monsters_location_array[x][y] == undefined){
+			monsters_array[i] = new Monster(x,y);
+			monsters_location_array[x][y] = 1;
+		}
+	}
+
 };
 
 /* ---- Program Funcitons ---- */
