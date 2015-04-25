@@ -6,9 +6,41 @@ p {
 	text-align: center;
 }
 
+ul {
+	list-style: none;
+}
+
 canvas {
 	border: black 1px solid;
 	margin-left: auto;
 	margin-right: auto;
 	display: block;
+}
+
+.key-item {
+	width: 12px;
+	height: 12px;
+	margin-right: 8px;
+	display: inline-block;
+}
+
+#key {
+	width: 600px;
+	margin: auto;
+}
+
+#blue {
+	background-color: #50B3FA;
+}
+
+#green {
+	background-color: #19B319;
+}
+
+#red {
+	background-color: #ED3E6F;
+}
+
+#brown {
+	background-color: #8F6353;
 }
