@@ -122,6 +122,7 @@ function Creature (locationX, locationY) {
 			}
 		}
 	}
+	
 	this.nearest_mushroom = function () {
 		// Check neighborhood:
 		// ...first check the squares immediately adjacent:
@@ -162,8 +163,85 @@ function Creature (locationX, locationY) {
 		}
 	}
 	
-	this.nearest_monster = function () {}
-	this.nearest_creature = function () {}
+	this.nearest_monster = function () {
+		// Check neighborhood:
+		// ...first check the squares immediately adjacent:
+		for (var i=this.locationX-1; i<this.locationX+2; i++) {
+			for (var j=this.locationY-1; j<this.locationY+2; j++) {
+				if (monsters_location_array != undefined && monsters_location_array[i][j]>0) {
+					
+					if (i<this.locationX) {
+						return "west";
+					}
+					else if (i>this.locationX) {
+						return "east";
+					}
+					else if (j<this.locationY) {
+						return "north";
+					} else {return "south"}
+
+				}
+			}
+		}
+		// ...if there is nothing immediately adjacent, check the next step out:
+		for (var i=this.locationX-2; i<this.locationX+3; i++) {
+			for (var j=this.locationY-2; j<this.locationY+3; j++) {
+				if (monsters_location_array != undefined && monsters_location_array[i][j]>0) {
+					
+					if (i<this.locationX) {
+						return "west";
+					}
+					else if (i>this.locationX) {
+						return "east";
+					}
+					else if (j<this.locationY) {
+						return "north";
+					} else {return "south"}
+
+				} else {return false;}
+			}
+		}
+	}
+
+	this.nearest_creature = function () {
+		// Check neighborhood:
+		// ...first check the squares immediately adjacent:
+		for (var i=this.locationX-1; i<this.locationX+2; i++) {
+			for (var j=this.locationY-1; j<this.locationY+2; j++) {
+				if (creatures_location_array != undefined && creatures_location_array[i][j]>0) {
+					
+					if (i<this.locationX) {
+						return "west";
+					}
+					else if (i>this.locationX) {
+						return "east";
+					}
+					else if (j<this.locationY) {
+						return "north";
+					} else {return "south"}
+
+				}
+			}
+		}
+		// ...if there is nothing immediately adjacent, check the next step out:
+		for (var i=this.locationX-2; i<this.locationX+3; i++) {
+			for (var j=this.locationY-2; j<this.locationY+3; j++) {
+				if (creatures_location_array != undefined && creatures_location_array[i][j]>0) {
+					
+					if (i<this.locationX) {
+						return "west";
+					}
+					else if (i>this.locationX) {
+						return "east";
+					}
+					else if (j<this.locationY) {
+						return "north";
+					} else {return "south"}
+
+				} else {return false;}
+			}
+		}
+	}
 
 	// Actions:
 	this.move = function () {}
