@@ -11,6 +11,11 @@ var world_height_cells = 20;		// world height in number of cells
 var block_size = 10;				// how big a 'cell' is in pixels on the screen
 var world_width_pixels = world_width_cells*block_size;		// world width in number of pixels 
 var world_height_pixels = world_width_cells*block_size;		// world height in number of pixels
+var creature_color = "#50B3FA";		// color of creatures: blue
+var monster_color = "#19B319";		// color of monsters: green
+var strawberry_color = "#ED3E6F";	// color of strawberries: red
+var mushroom_color = "#8F6353";		// color of mushrooms: brown
+
 
 // Data
 var strab_array = [];				// 2D location array, each cell contains a number indicating the quantity of food
@@ -20,9 +25,11 @@ var creatures_location_array = [];	// 2D array of all the creatures locations
 var monsters_array = [];			// 1D array of all the monsters
 var monsters_location_array = [];	// 2D array of all the monsters locations
 
+
+
 /* ---- Canvas Element ---- */
 var canvas = document.createElement("canvas");
-var context = canvas.getContext("2d");
+var ctx = canvas.getContext("2d");
 canvas.width = world_width_pixels;
 canvas.height = world_height_pixels;
 document.body.appendChild(canvas);
@@ -67,12 +74,18 @@ function Monster () {
 }
 
 /* ---- Mushrooms ---- */
-//Mushrooms.prototype = {};
+function Mushroom () {
+
+}
 
 /* ---- Strawberries ---- */
+function Strawberry () {
+
+}
 
 /* ---- Draw Everything ---- */
 var render = function () {
+	ctx.fillRect(20,20,144,144);
 };
 
 /* ---- Program Funcitons ---- */
@@ -81,7 +94,8 @@ var reset = function () {
 };
 
 var main = function () {
-	console.log("Mic check, one, two...");	
+	console.log("Mic check, one, two...");
+	render();	
 };
 
 /* ---- Running the Program ---- */
