@@ -26,8 +26,8 @@ var creatures_location_array = new Array(world_width_cells);	// 2D array of all 
 var num_monsters = 5;											// number of monsters in the world
 var monsters_array = new Array(num_monsters);					// 1D array of all the monsters
 var monsters_location_array = new Array(world_width_cells);		// 2D array of all the monsters locations
-var chance_of_strawb = 0.15;									// the chance of any one cell containing a strawberry
-var chance_of_mush = 0.15;										// the chance of any one cell containing a mushroom
+var chance_of_strawb = 0.08;									// the chance of any one cell containing a strawberry
+var chance_of_mush = 0.08;										// the chance of any one cell containing a mushroom
 var max_strawb = 6;												// the highest number of food any one strawberry tile can contain
 
 /* ---- Canvas Element ---- */
@@ -93,7 +93,25 @@ function Strawberry () {
 
 /* ---- Draw Everything ---- */
 var render = function () {
-	ctx.fillRect(10, 10, block_size, block_size);
+	//ctx.fillRect(10, 10, block_size, block_size);
+
+	// draw the strawberry & mushroom map:
+	for (var i=0; i<world_width_cells; i++) {
+		for (var j=0; j<world_height_cells; j++) {
+			var x = i*block_size;
+			var y = j*block_size;
+
+			if (strawb_array[i][j]>0) {
+				ctx.fillStyle = strawberry_color;
+				ctx.fillRect(x, y, block_size, block_size);
+			}
+			if (mushroom_array[i][j]>0) {
+				ctx.fillStyle = mushroom_color;
+				ctx.fillRect(x, y, block_size, block_size);
+			}
+		}
+	}
+
 };
 
 
@@ -104,7 +122,6 @@ var initialise = function () {
 	for (var i=0; i<world_width_cells; i++) {
 		strawb_array[i] = new Array(world_height_cells);
 		mushroom_array[i] = new Array(world_height_cells);
-		var col = i;
 
 		for (var j=0; j<world_height_cells; j++) {
 			var rand = Math.random();
@@ -123,6 +140,9 @@ var initialise = function () {
 		}
 	}
 
+	// fill monsters_array
+
+	// fill creatures_array
 };
 
 /* ---- Program Funcitons ---- */
