@@ -18,15 +18,17 @@ var mushroom_color = "#8F6353";		// color of mushrooms: brown
 
 
 // Data
-var strab_array = new Array(world_width_cells);					// 2D location array, each cell contains a number indicating the quantity of food
+var strawb_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
 var mushroom_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
 var num_creatures = 10;											// number of creatures in the world
-var creatures_array = [];										// 1D array of all the creatures
+var creatures_array = new Array(num_creatures);					// 1D array of all the creatures
 var creatures_location_array = new Array(world_width_cells);	// 2D array of all the creatures locations
 var num_monsters = 5;											// number of monsters in the world
-var monsters_array = [];										// 1D array of all the monsters
+var monsters_array = new Array(num_monsters);					// 1D array of all the monsters
 var monsters_location_array = new Array(world_width_cells);		// 2D array of all the monsters locations
-
+var chance_of_strawb = 0.15;									// the chance of any one cell containing a strawberry
+var chance_of_mush = 0.15;										// the chance of any one cell containing a mushroom
+var max_strawb = 6;												// the highest number of food any one strawberry tile can contain
 
 /* ---- Canvas Element ---- */
 var canvas = document.createElement("canvas");
@@ -97,9 +99,29 @@ var render = function () {
 
 /* ---- Initialise Everything ---- */
 var initialise = function () {
-	// fill strawberry array.
+	
+	// fill strawberry & mushroom array:
+	for (var i=0; i<world_width_cells; i++) {
+		strawb_array[i] = new Array(world_height_cells);
+		mushroom_array[i] = new Array(world_height_cells);
+		var col = i;
 
-	// fill mushroom array.
+		for (var j=0; j<world_height_cells; j++) {
+			var rand = Math.random();
+
+			if (rand<chance_of_strawb) {
+				strawb_array[i][j] = Math.floor(Math.random() * max_strawb) + 1;
+				mushroom_array[i][j] = 0;
+			}
+			else if (rand>(1-chance_of_mush)) {
+				mushroom_array[i][j] = 1;
+				strawb_array[i][j] = 0;
+			} else {
+				mushroom_array[i][j] = 0;
+				strawb_array[i][j] = 0;
+			}
+		}
+	}
 
 };
 
@@ -109,7 +131,7 @@ var reset = function () {
 };
 
 var main = function () {
-	console.log(Math.random());
+	console.log(strawb_array[3][4]);
 	render();	
 };
 
