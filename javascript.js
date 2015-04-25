@@ -18,13 +18,14 @@ var mushroom_color = "#8F6353";		// color of mushrooms: brown
 
 
 // Data
-var strab_array = [];				// 2D location array, each cell contains a number indicating the quantity of food
-var mushroom_array = [];			// 2D location array, each cell contains a number indicating the quantity of food
-var creatures_array = [];			// 1D array of all the creatures
-var creatures_location_array = [];	// 2D array of all the creatures locations
-var monsters_array = [];			// 1D array of all the monsters
-var monsters_location_array = [];	// 2D array of all the monsters locations
-
+var strab_array = new Array(world_width_cells);					// 2D location array, each cell contains a number indicating the quantity of food
+var mushroom_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
+var num_creatures = 10;											// number of creatures in the world
+var creatures_array = [];										// 1D array of all the creatures
+var creatures_location_array = new Array(world_width_cells);	// 2D array of all the creatures locations
+var num_monsters = 5;											// number of monsters in the world
+var monsters_array = [];										// 1D array of all the monsters
+var monsters_location_array = new Array(world_width_cells);		// 2D array of all the monsters locations
 
 
 /* ---- Canvas Element ---- */
@@ -33,6 +34,7 @@ var ctx = canvas.getContext("2d");
 canvas.width = world_width_pixels;
 canvas.height = world_height_pixels;
 document.body.appendChild(canvas);
+
 
 /* ---- Creatures ---- */
 function Creature () {
@@ -59,6 +61,7 @@ function Creature () {
 	this.select_action = function () {}
 }
 
+
 /* ---- Monsters ---- */
 function Monster () {
 
@@ -73,19 +76,31 @@ function Monster () {
 	this.select_action = function () {}
 }
 
+
 /* ---- Mushrooms ---- */
 function Mushroom () {
 
 }
+
 
 /* ---- Strawberries ---- */
 function Strawberry () {
 
 }
 
+
 /* ---- Draw Everything ---- */
 var render = function () {
-	ctx.fillRect(20,20,144,144);
+	ctx.fillRect(10, 10, block_size, block_size);
+};
+
+
+/* ---- Initialise Everything ---- */
+var initialise = function () {
+	// fill strawberry array.
+
+	// fill mushroom array.
+
 };
 
 /* ---- Program Funcitons ---- */
@@ -94,13 +109,20 @@ var reset = function () {
 };
 
 var main = function () {
-	console.log("Mic check, one, two...");
+	console.log(Math.random());
 	render();	
 };
 
+
 /* ---- Running the Program ---- */
 reset();
+initialise();
 main();
+
+/* --------------- Just for my own reference: --------------- */
+// If you wanted to get between 1 and 6, you would put:
+// Math.floor(Math.random() * 6) + 1;
+
 
 /* --------------- Objects & Classes in the World --------------- */
 
