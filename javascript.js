@@ -88,7 +88,7 @@ function Creature (locationX, locationY) {
 		// ...first check the squares immediately adjacent:
 		for (var i=this.locationX-1; i<this.locationX+2; i++) {
 			for (var j=this.locationY-1; j<this.locationY+2; j++) {
-				if (strawb_array[i][j]>0) {
+				if (strawb_array != undefined && strawb_array[i][j]>0) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -103,7 +103,6 @@ function Creature (locationX, locationY) {
 				}
 			}
 		}
-
 		// ...if there is nothing immediately adjacent, check the next step out:
 		for (var i=this.locationX-2; i<this.locationX+3; i++) {
 			for (var j=this.locationY-2; j<this.locationY+3; j++) {
@@ -123,7 +122,46 @@ function Creature (locationX, locationY) {
 			}
 		}
 	}
-	this.nearest_mushroom = function () {}
+	this.nearest_mushroom = function () {
+		// Check neighborhood:
+		// ...first check the squares immediately adjacent:
+		for (var i=this.locationX-1; i<this.locationX+2; i++) {
+			for (var j=this.locationY-1; j<this.locationY+2; j++) {
+				if (mushroom_array != undefined && mushroom_array[i][j]>0) {
+					
+					if (i<this.locationX) {
+						return "west";
+					}
+					else if (i>this.locationX) {
+						return "east";
+					}
+					else if (j<this.locationY) {
+						return "north";
+					} else {return "south"}
+
+				}
+			}
+		}
+		// ...if there is nothing immediately adjacent, check the next step out:
+		for (var i=this.locationX-2; i<this.locationX+3; i++) {
+			for (var j=this.locationY-2; j<this.locationY+3; j++) {
+				if (mushroom_array != undefined && mushroom_array[i][j]>0) {
+					
+					if (i<this.locationX) {
+						return "west";
+					}
+					else if (i>this.locationX) {
+						return "east";
+					}
+					else if (j<this.locationY) {
+						return "north";
+					} else {return "south"}
+
+				} else {return false;}
+			}
+		}
+	}
+	
 	this.nearest_monster = function () {}
 	this.nearest_creature = function () {}
 
@@ -282,9 +320,10 @@ var reset = function () {
 };
 
 var main = function () {
-	console.log(creatures_array[0].nearest_strawb());
-
 	render();
+	console.log(creatures_array[0].nearest_mushroom());
+
+	
 	timestep++;
 	if (timestep<=total_frames) {requestAnimationFrame(main)}
 };
