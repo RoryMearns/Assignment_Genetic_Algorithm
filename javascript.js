@@ -72,7 +72,7 @@ function Creature (locationX, locationY) {
 
 	// Sensory Functions:
 	this.strawb_present = function () {
-		if (strab_array[this.locationX][this.locationY] > 0) {
+		if (strawb_array[this.locationX][this.locationY] > 0) {
 			return true;
 		} else {return false;}
 	}
@@ -86,9 +86,9 @@ function Creature (locationX, locationY) {
 	this.nearest_strawb = function () {
 		// Check neighborhood:
 		// ...first check the squares immediately adjacent:
-		for (var i=this.locationX-1; i<i+3; i++) {
-			for (var j=this.locationY-1; j<j+3; j++) {
-				if (strab_array[i][j]>0) {
+		for (var i=this.locationX-1; i<this.locationX+2; i++) {
+			for (var j=this.locationY-1; j<this.locationY+2; j++) {
+				if (strawb_array[i][j]>0) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -105,9 +105,9 @@ function Creature (locationX, locationY) {
 		}
 
 		// ...if there is nothing immediately adjacent, check the next step out:
-		for (var i=this.locationX-2; i<i+5; i++) {
-			for (var j=this.locationY-2; j<j+5; j++) {
-				if (strab_array[i][j]>0) {
+		for (var i=this.locationX-2; i<this.locationX+3; i++) {
+			for (var j=this.locationY-2; j<this.locationY+3; j++) {
+				if (strawb_array[i][j]>0) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -119,7 +119,7 @@ function Creature (locationX, locationY) {
 						return "north";
 					} else {return "south"}
 
-				}
+				} else {return false;}
 			}
 		}
 	}
@@ -282,7 +282,8 @@ var reset = function () {
 };
 
 var main = function () {
-	console.log(timestep);
+	console.log(creatures_array[0].nearest_strawb());
+
 	render();
 	timestep++;
 	if (timestep<=total_frames) {requestAnimationFrame(main)}
@@ -315,7 +316,7 @@ main();
 			- nearest_creature
 	action: - move ('n' 'e' 's' 'w') direction can be random but can also be relative to the directions returned by its senses
 				can move 'towards' or 'away_from' the nearst X in its neighbourhood. Decreases energy level.
-			- eat will consume food from it's current square (decrement strab_array/mushroom_array by a constant)
+			- eat will consume food from it's current square (decrement strawb_array/mushroom_array by a constant)
 				increasing it's energy level by some amount (greater than the energy required to eat). 
 				eating a unit of mushroom decreases it's energy to 0 (kills it).
 	chromosome:	13 position in the chromosome, first 6 map to the 6 sensory functions:
@@ -337,7 +338,7 @@ main();
 
 /* --------------- Data Structures of the World --------------- */
 
-// Strawberry Array: strab_array, 2D array, each cell contains a number indicating the quantity of food.
+// Strawberry Array: strawb_array, 2D array, each cell contains a number indicating the quantity of food.
 // 			strawberries & mushrooms cannot share the same cell.
 
 // Mushroom Array: mushroom_array, 2D array, each cell contains a number indicating the quantity of food.
