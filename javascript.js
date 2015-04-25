@@ -2,16 +2,18 @@
 
 /* ---- World Variables & Data Structures ---- */
 // Timing
-var timestep;						// the 'world clock'
+var timestep = 0;					// the 'world clock'
+var total_frames = 20;				// how many times to run the program
 var wait;							// how long to wait between timesteps for possible animation
 
 // Drawing
-var world_width_cells = 80;			// world width in number of cells 
+var world_width_cells = 60;			// world width in number of cells 
 var world_height_cells = 20;		// world height in number of cells
-var block_size = 10;				// how big a 'cell' is in pixels on the screen
+var block_size = 20;				// how big a 'cell' is in pixels on the screen
 var world_width_pixels = world_width_cells*block_size;		// world width in number of pixels 
 var world_height_pixels = world_height_cells*block_size;	// world height in number of pixels
 var creature_color = "#50B3FA";		// color of creatures: blue
+var dead_creature_color = "#000000"	// color of dead creatures: black
 var monster_color = "#19B319";		// color of monsters: green
 var strawberry_color = "#ED3E6F";	// color of strawberries: red
 var mushroom_color = "#8F6353";		// color of mushrooms: brown
@@ -25,8 +27,8 @@ var creatures_location_array = new Array(world_width_cells);	// 2D array of all 
 var num_monsters = 5;											// number of monsters in the world
 var monsters_array = new Array(num_monsters);					// 1D array of all the monsters
 var monsters_location_array = new Array(world_width_cells);		// 2D array of all the monsters locations
-var chance_of_strawb = 0.05;									// the chance of any one cell containing a strawberry
-var chance_of_mush = 0.05;										// the chance of any one cell containing a mushroom
+var chance_of_strawb = 0.03;									// the chance of any one cell containing a strawberry
+var chance_of_mush = 0.03;										// the chance of any one cell containing a mushroom
 var max_strawb = 6;												// the highest number of food any one strawberry tile can contain
 
 // Creature info:
@@ -69,8 +71,16 @@ function Creature (locationX, locationY) {
 	this.chromosome[12] = Math.floor(Math.random() * 10) + 1;
 
 	// Sensory Functions:
-	this.strawb_present = function () {}
-	this.mushroom_present = function () {}
+	this.strawb_present = function () {
+		if (strab_array[this.locationX][this.locationY] > 0) {
+			return true;
+		} else {return false;}
+	}
+	this.mushroom_present = function () {
+		if (mushroom_array[this.locationX][this.locationY] > 0) {
+			return true;
+		} else {return false;}
+	}
 	this.nearest_strawb = function () {}
 	this.nearest_mushroom = function () {}
 	this.nearest_monster = function () {}
@@ -127,6 +137,10 @@ var render = function () {
 
 			if (creatures_location_array[i][j] == 1) {
 				ctx.fillStyle = creature_color;
+				ctx.fillRect(x, y, block_size, block_size);
+			}
+			else if (creatures_location_array[i][j] == 2) {
+				ctx.fillStyle = dead_creature_color;
 				ctx.fillRect(x, y, block_size, block_size);
 			}
 		}
@@ -207,8 +221,18 @@ var initialise = function () {
 		}
 	}
 
-	// Check for any immediate collisions:
+	// Check for any immediate monster+creature collisions:
+	for (var i=0; i<monsters_array.length; i++) {
 
+		for (var j=0; j<creatures_array.length; j++) {
+
+			if (monsters_array[i].locationX == creatures_array[j].locationX && monsters_array[i].locationY == creatures_array[j].locationY) {
+				console.log("Collision on initialisation! Creature instantly killed");
+				creatures_array[j].energy_level = 0;
+				creatures_location_array[creatures_array[j].locationX][creatures_array[j].locationY] == 2;
+			}
+		}
+	}
 };
 
 /* ---- Program Funcitons ---- */
@@ -217,8 +241,10 @@ var reset = function () {
 };
 
 var main = function () {
-	console.log(Math.floor(Math.random() * 10) + 1);
-	render();	
+	console.log(timestep);
+	render();
+	timestep++;
+	if (timestep<=total_frames) {requestAnimationFrame(main)}
 };
 
 
@@ -266,11 +292,6 @@ main();
 //								They move towards the nearest creature, or at random.
 //				state: location
 //				sense: detect creatures in their local neighbourhood.
-
-// Mushrooms: Poisonous Food
-
-// Strawberries: Edible food
-
 
 
 /* --------------- Data Structures of the World --------------- */
