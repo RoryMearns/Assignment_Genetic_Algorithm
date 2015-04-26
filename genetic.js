@@ -4,7 +4,7 @@
 // Timing
 var timestep = 0;					// the 'world clock'
 var total_frames = 50;				// how many times to run the program
-var wait;							// how long to wait between timesteps for possible animation
+var wait = 100;							// how long to wait between timesteps for possible animation
 
 // Drawing
 var world_width_cells = 60;			// world width in number of cells 
@@ -21,20 +21,20 @@ var mushroom_color = "#8F6353";		// color of mushrooms: brown
 // Data
 var strawb_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
 var mushroom_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
-var num_creatures = 10;											// number of creatures in the world
+var num_creatures = 30;											// number of creatures in the world
 var creatures_array = new Array(num_creatures);					// 1D array of all the creatures
 var creatures_location_array = new Array(world_width_cells);	// 2D array of all the creatures locations
 var num_monsters = 6;											// number of monsters in the world
 var monsters_array = new Array(num_monsters);					// 1D array of all the monsters
 var monsters_location_array = new Array(world_width_cells);		// 2D array of all the monsters locations
-var chance_of_strawb = 0.03;									// the chance of any one cell containing a strawberry
-var chance_of_mush = 0.03;										// the chance of any one cell containing a mushroom
+var chance_of_strawb = 0.04;									// the chance of any one cell containing a strawberry
+var chance_of_mush = 0.04;										// the chance of any one cell containing a mushroom
 var max_strawb = 6;												// the highest number of food any one strawberry tile can contain
 var max_mushroom = 6;											// the highest number of food any one mushroom tile can contain	
 var energy_from_food = 10;
 
 // Creature info:
-var start_energy = 50;											// how much energy each creature starts with
+var start_energy = 100;											// how much energy each creature starts with
 var eat_actions = ["eat","ignore"];								// for building the chromosones
 var move_actions = ["towards", "away_from", "random", "ignore"];			// for building the chromosones
 var default_move_actions = ["random", "north", "east", "south", "west"];	// for building the chromosones
@@ -647,7 +647,9 @@ var main = function () {
 	render();		
 	timestep++;
 	if (timestep<=total_frames) {
-		setTimeout(function () {requestAnimationFrame(main);}, 500);
+		setTimeout(function () {requestAnimationFrame(main);}, wait);
+	} else {
+		creatures_array.sort(function(obj1, obj2) {return obj2.energy_level - obj1.energy_level;});
 	}
 };
 
