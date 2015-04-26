@@ -24,7 +24,7 @@ var mushroom_array = new Array(world_width_cells);				// 2D location array, each
 var num_creatures = 5;											// number of creatures in the world
 var creatures_array = new Array(num_creatures);					// 1D array of all the creatures
 var creatures_location_array = new Array(world_width_cells);	// 2D array of all the creatures locations
-var num_monsters = 5;											// number of monsters in the world
+var num_monsters = 1;											// number of monsters in the world
 var monsters_array = new Array(num_monsters);					// 1D array of all the monsters
 var monsters_location_array = new Array(world_width_cells);		// 2D array of all the monsters locations
 var chance_of_strawb = 0.03;									// the chance of any one cell containing a strawberry
@@ -414,9 +414,10 @@ function Monster (locationX, locationY) {
 						return "north";
 					} else {return "south"}
 
-				} else {return false;}
+				}
 			}
 		}
+		return false;
 	}
 
 	// Actions:
@@ -647,7 +648,19 @@ var initialise = function () {
 
 /* ---- Program Funcitons ---- */
 var main = function () {
-	step_creatures();
+	
+	if (timestep == 0) {
+	creatures_array[0].locationX = 5;
+	creatures_array[0].locationY = 5;
+	creatures_location_array[5][5] = 1;
+
+	monsters_array[0].locationX = 3;
+	monsters_array[0].locationY = 3;
+	monsters_location_array[3][3] = 1;
+	}
+	render();
+
+	//step_creatures();
 	step_monsters();
 	render();		
 	timestep++;
@@ -661,42 +674,6 @@ var main = function () {
 initialise();
 render();
 main();
-
-/* --------------- Just for my own reference: --------------- */
-// If you wanted to get between 1 and 6, you would put:
-// Math.floor(Math.random() * 6) + 1;
-
-
-/* --------------- Objects & Classes in the World --------------- */
-
-// Creatures:
-/* The creatures that will evolve. Each creature contains a 'state', 'sense', 'action', 'chromosone'
-	state: 	energy_level: decremented by some small value each timestep, if it reaches 0 it's dead
-	location:
-	sense: 	detect monsters and food in their local neighbourhood
-			can tell it things about the current square or it's neighbourhood.
-			- strawb_present (bool) indicating the presence/absence of strawberries at current location
-			- mushroom_present (bool) indicating the presence/absence of mushrooms at current location
-			- nearest_strawb ('n' 'e' 's' 'w') indicating the direction towards the nearst strawb in current neighbourhood
-			- nearest_mushroom
-			- nearest_monster
-			- nearest_creature
-	action: - move ('n' 'e' 's' 'w') direction can be random but can also be relative to the directions returned by its senses
-				can move 'towards' or 'away_from' the nearst X in its neighbourhood. Decreases energy level.
-			- eat will consume food from it's current square (decrement strawb_array/mushroom_array by a constant)
-				increasing it's energy level by some amount (greater than the energy required to eat). 
-				eating a unit of mushroom decreases it's energy to 0 (kills it).
-	chromosone:	13 position in the chromosone, first 6 map to the 6 sensory functions:
-			1[0] - action on 'strawb_present'		- eat/ignore
-			2[1] - action on 'mushroom_present'		- eat/ignore
-			3[2] - action on 'nearst_strawb'		- towards/away_from/random/ignore
-			4[3] - action on 'nearest_mushroom'		- towards/away_from/random/ignore
-			5[4] - action on 'nearest_monster'		- towards/away_from/random/ignore
-			6[5] - action on 'nearest_creature'		- towards/away_from/random/ignore
-			7[6] - default action					- random/north/east/south/west
-			8-13 specify weights for actions 1-6 to determine what to do if multiple actions are activated.
-			*/
-
 
 
 
