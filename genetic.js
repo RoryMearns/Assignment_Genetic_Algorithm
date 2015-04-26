@@ -23,6 +23,7 @@ var strawb_array = new Array(world_width_cells);				// 2D location array, each c
 var mushroom_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
 var num_creatures = 30;											// number of creatures in the world
 var creatures_array = new Array(num_creatures);					// 1D array of all the creatures
+var previous_creatures_array = new Array(num_creatures);		// Store the previous generation in
 var creatures_location_array = new Array(world_width_cells);	// 2D array of all the creatures locations
 var num_monsters = 6;											// number of monsters in the world
 var monsters_array = new Array(num_monsters);					// 1D array of all the monsters
@@ -493,6 +494,18 @@ var step_monsters = function () {
 	}
 }
 
+var cloneObject = function (source) {
+
+	// needed to clone arrays insted of just copying the reference to them:
+    for (i in source) {
+        if (typeof source[i] == 'source') {
+            this[i] = new cloneObject(source[i]);
+        }
+        else{
+            this[i] = source[i];
+		}
+    }
+}
 
 /* ---- Draw Everything ---- */
 var render = function () {
@@ -644,14 +657,20 @@ var main = function () {
 	
 	// Step creatures every time step:
 	step_creatures();
+
 	// Step monsters every second time step:
 	if (timestep%2 == 0) {step_monsters();}
+
+	// Re-render everything and increment timestep:
 	render();		
 	timestep++;
+
+	// Loop if we are not at the end of the generation, otherwise sort the creatures_array:
 	if (timestep<=total_frames) {
 		setTimeout(function () {requestAnimationFrame(main);}, wait);
 	} else {
 		creatures_array.sort(function(obj1, obj2) {return obj2.energy_level - obj1.energy_level;});
+		previous_creatures_array = new cloneObject(creatures_array);
 	}
 };
 
