@@ -4,7 +4,7 @@
 // Timing
 var timestep = 0;					// the 'world clock'
 var total_frames = 50;				// how many times to run the program
-var wait = 100;							// how long to wait between timesteps for possible animation
+var wait = 100;						// how long to wait between timesteps for possible animation
 
 // Drawing
 var world_width_cells = 60;			// world width in number of cells 
@@ -642,8 +642,10 @@ var initialise = function () {
 /* ---- Program Funcitons ---- */
 var main = function () {
 	
+	// Step creatures every time step:
 	step_creatures();
-	step_monsters();
+	// Step monsters every second time step:
+	if (timestep%2 == 0) {step_monsters();}
 	render();		
 	timestep++;
 	if (timestep<=total_frames) {
