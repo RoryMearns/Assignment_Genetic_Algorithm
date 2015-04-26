@@ -1,20 +1,36 @@
+body {
+	background-image: url(images/background.jpg);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-attachment: fixed;
+}
+
 h1 {
+	color: white;
 	text-align: center;
 }
 
+h2 {
+	color: white;
+}
+
 p {
+	color: white;
 	text-align: center;
 }
 
 ul {
+	color: white;
 	list-style: none;
 }
 
 canvas {
-	border: black 1px solid;
+	border: white 1px solid;
 	margin-left: auto;
 	margin-right: auto;
 	display: block;
+	background-color: white;
+
 }
 
 .key-item {
@@ -22,6 +38,7 @@ canvas {
 	height: 12px;
 	margin-right: 8px;
 	display: inline-block;
+	border: 1px solid white;
 }
 
 #key {

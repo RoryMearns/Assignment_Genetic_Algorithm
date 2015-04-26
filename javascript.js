@@ -302,7 +302,7 @@ function Creature (locationX, locationY) {
 
 		// Go through all the senses and add any appropriate actions:
 		if (this.strawb_present()!= false && this.chromosone[0] != "ignore") {
-			this.actions_list.push(["eat_actions", this.chromosone[0], this.chromosone[7], "strawb"]);
+			this.actions_list.push(["eat_actions", this.chromosone[0], this.chromosone[7], "strawberry"]);
 		}
 		if (this.mushroom_present() != false && this.chromosone[1] != "ignore") {
 			this.actions_list.push(["eat_actions", this.chromosone[1], this.chromosone[8], "mushroom"]);
