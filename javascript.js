@@ -65,7 +65,7 @@ function Creature (locationX, locationY) {
 	this.chromosone[4] = move_actions[Math.floor(Math.random() * 4)];
 	this.chromosone[5] = move_actions[Math.floor(Math.random() * 4)];
 	this.chromosone[6] = default_move_actions[Math.floor(Math.random() * 5)];
-	this.chromosone[7] = Math.floor(Math.random() * 100) + 1;					// will be an int between 1-10
+	this.chromosone[7] = Math.floor(Math.random() * 100) + 1;					// will be an int between 1-100
 	this.chromosone[8] = Math.floor(Math.random() * 100) + 1;
 	this.chromosone[9] = Math.floor(Math.random() * 100) + 1;	
 	this.chromosone[10] = Math.floor(Math.random() * 100) + 1;
@@ -453,7 +453,12 @@ function Monster (locationX, locationY) {
 		}
 	}
 
-	this.select_action = function () {}
+	this.select_action = function () {
+		// Check for any nearby creatures:
+		if (this.nearest_creature != false) {
+			this.move(this.nearest_creature);
+		} else {this.move("random");}
+	}
 }
 
 /* ---- Operational Functions ---- */
@@ -626,11 +631,9 @@ var main = function () {
 	//console.log(a);
 
 	
-	//for (var i=0; i<monsters_array.length; i++) {
-	//	var dir = monsters_array[i].nearest_creature() ? monsters_array[i].nearest_creature() : "random";
-	//	monsters_array[i].move(dir);
-	//	collision_check(monsters_array[i].locationX, monsters_array[i].locationY);
-	//}
+	for (var i=0; i<13; i++) {
+		console.log(creatures_array[0].chromosone[i]);
+	}
 
 	
 	timestep++;
