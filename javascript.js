@@ -3,7 +3,7 @@
 /* ---- World Variables & Data Structures ---- */
 // Timing
 var timestep = 0;					// the 'world clock'
-var total_frames = 100;				// how many times to run the program
+var total_frames = 1;				// how many times to run the program
 var wait;							// how long to wait between timesteps for possible animation
 
 // Drawing
@@ -35,9 +35,9 @@ var energy_from_food = 3;
 
 // Creature info:
 var start_energy = 5;											// how much energy each creature starts with
-var eat_actions = ["eat","ignore"];								// for building the chromosomes
-var move_actions = ["towards", "away from", "random", "ignore"];			// for building the chromosomes
-var default_move_actions = ["random", "north", "east", "south", "west"];	// for building the chromosomes
+var eat_actions = ["eat","ignore"];								// for building the chromosones
+var move_actions = ["towards", "away_from", "random", "ignore"];			// for building the chromosones
+var default_move_actions = ["random", "north", "east", "south", "west"];	// for building the chromosones
 
 // Canvas
 var canvas = document.createElement("canvas");
@@ -56,21 +56,21 @@ function Creature (locationX, locationY) {
 	this.energy_level = start_energy;
 	this.actions_list = [];
 
-	// Chromosome:
-	this.chromosome = new Array(13);
-	this.chromosome[0] = eat_actions[Math.floor(Math.random() * 2)];
-	this.chromosome[1] = eat_actions[Math.floor(Math.random() * 2)];
-	this.chromosome[2] = move_actions[Math.floor(Math.random() * 4)];
-	this.chromosome[3] = move_actions[Math.floor(Math.random() * 4)];
-	this.chromosome[4] = move_actions[Math.floor(Math.random() * 4)];
-	this.chromosome[5] = move_actions[Math.floor(Math.random() * 4)];
-	this.chromosome[6] = default_move_actions[Math.floor(Math.random() * 5)];
-	this.chromosome[7] = Math.floor(Math.random() * 10) + 1;					// will be an int between 1-10
-	this.chromosome[8] = Math.floor(Math.random() * 10) + 1;
-	this.chromosome[9] = Math.floor(Math.random() * 10) + 1;	
-	this.chromosome[10] = Math.floor(Math.random() * 10) + 1;
-	this.chromosome[11] = Math.floor(Math.random() * 10) + 1;
-	this.chromosome[12] = Math.floor(Math.random() * 10) + 1;
+	// chromosone:
+	this.chromosone = new Array(13);
+	this.chromosone[0] = eat_actions[Math.floor(Math.random() * 2)];
+	this.chromosone[1] = eat_actions[Math.floor(Math.random() * 2)];
+	this.chromosone[2] = move_actions[Math.floor(Math.random() * 4)];
+	this.chromosone[3] = move_actions[Math.floor(Math.random() * 4)];
+	this.chromosone[4] = move_actions[Math.floor(Math.random() * 4)];
+	this.chromosone[5] = move_actions[Math.floor(Math.random() * 4)];
+	this.chromosone[6] = default_move_actions[Math.floor(Math.random() * 5)];
+	this.chromosone[7] = Math.floor(Math.random() * 100) + 1;					// will be an int between 1-10
+	this.chromosone[8] = Math.floor(Math.random() * 100) + 1;
+	this.chromosone[9] = Math.floor(Math.random() * 100) + 1;	
+	this.chromosone[10] = Math.floor(Math.random() * 100) + 1;
+	this.chromosone[11] = Math.floor(Math.random() * 100) + 1;
+	this.chromosone[12] = Math.floor(Math.random() * 100) + 1;
 
 	// Sensory Functions:
 	this.strawb_present = function () {
@@ -298,7 +298,73 @@ function Creature (locationX, locationY) {
 		}
 	}
 
-	this.select_action = function () {}
+	this.select_action = function () {
+		this.actions_list = [];
+
+		// Go through all the senses and add any appropriate actions:
+		if (this.strawb_present()) {
+			this.actions_list.push(["eat_actions", this.chromosone[0], this.chromosone[7]], "strawb");
+		}
+		if (this.mushroom_present()) {
+			this.actions_list.push(["eat_actions", this.chromosone[1], this.chromosone[8]], "mushroom")
+		}
+		if (this.nearest_strawb() != false && this.chromosone[2] != "ignore") {
+			this.actions_list.push(["move_actions", this.chromosone[2], this.chromosone[9], this.nearest_strawb()]);
+		}
+		if (this.nearest_mushroom() != false && this.chromosone[3] != "ignore") {
+			this.actions_list.push(["move_actions", this.chromosone[3], this.chromosone[10], this.nearest_mushroom()]);
+		}
+		if (this.nearest_monster() != false && this.chromosone[4] != "ignore") {
+			this.actions_list.push(["move_actions", this.chromosone[4], this.chromosone[11], this.nearest_monster()]);
+		}
+		if (this.nearest_creature() != false && this.chromosone[4] != "ignore") {
+			this.actions_list.push(["move_actions", this.chromosone[5], this.chromosone[12], this.nearest_creature()]);
+		}
+
+		// If nothing is added to the actions list, do the default:
+		if (this.actions_list.length == 0) {
+			this.move(this.chromosone[6]);
+		} else {
+			var action = this.actions_list[0];
+			var current_weight = this.actions_list[0][2];
+
+			for (var i=1; i<this.actions_list.length; i++) {
+				if (current_weight<this.actions_list[i][2]) {
+					action = this.actions_list[i];
+					current_weight = this.actions_list[i][2];
+				}
+			}
+			// Now do the action:
+			if (action[0] == "eat_actions") {
+				this.eat(action[3]);
+			}
+			else if (action[0] == "move_actions") {
+				if (action[1] == "random") {
+					this.move("random");
+				}
+				else if (action[1] == "towards") {
+					this.move(action[3]);
+				}
+				else if (action[1] == "away_from") {
+					switch (action[3]) {
+						case "north":
+						this.move("south");
+						break;
+						case "east":
+						this.move("west");
+						break;
+						case "south":
+						this.move("north");
+						break;
+						case "west":
+						this.move("east");
+						break;
+					}
+				}
+			}
+
+		}
+	}
 }
 
 
@@ -390,8 +456,7 @@ function Monster (locationX, locationY) {
 	this.select_action = function () {}
 }
 
-/* ---- Look for collisions ---- */
-
+/* ---- Operational Functions ---- */
 var collision_check = function (x,y) {
 	
 	// If a monster collides with a creature it kills it:
@@ -402,6 +467,7 @@ var collision_check = function (x,y) {
 		}
 	}
 };
+
 
 /* ---- Draw Everything ---- */
 var render = function () {
@@ -556,12 +622,15 @@ var reset = function () {
 var main = function () {
 	render();
 
-	//console.log("creatures_array[0].nearest_mushroom()");
-	for (var i=0; i<monsters_array.length; i++) {
-		var dir = monsters_array[i].nearest_creature() ? monsters_array[i].nearest_creature() : "random";
-		monsters_array[i].move(dir);
-		collision_check(monsters_array[i].locationX, monsters_array[i].locationY);
-	}
+	console.log(creatures_array[0].select_action());
+	//console.log(a);
+
+	
+	//for (var i=0; i<monsters_array.length; i++) {
+	//	var dir = monsters_array[i].nearest_creature() ? monsters_array[i].nearest_creature() : "random";
+	//	monsters_array[i].move(dir);
+	//	collision_check(monsters_array[i].locationX, monsters_array[i].locationY);
+	//}
 
 	
 	timestep++;
@@ -584,7 +653,7 @@ main();
 /* --------------- Objects & Classes in the World --------------- */
 
 // Creatures:
-/* The creatures that will evolve. Each creature contains a 'state', 'sense', 'action', 'chromosome'
+/* The creatures that will evolve. Each creature contains a 'state', 'sense', 'action', 'chromosone'
 	state: 	energy_level: decremented by some small value each timestep, if it reaches 0 it's dead
 	location:
 	sense: 	detect monsters and food in their local neighbourhood
@@ -600,7 +669,7 @@ main();
 			- eat will consume food from it's current square (decrement strawb_array/mushroom_array by a constant)
 				increasing it's energy level by some amount (greater than the energy required to eat). 
 				eating a unit of mushroom decreases it's energy to 0 (kills it).
-	chromosome:	13 position in the chromosome, first 6 map to the 6 sensory functions:
+	chromosone:	13 position in the chromosone, first 6 map to the 6 sensory functions:
 			1[0] - action on 'strawb_present'		- eat/ignore
 			2[1] - action on 'mushroom_present'		- eat/ignore
 			3[2] - action on 'nearst_strawb'		- towards/away_from/random/ignore
