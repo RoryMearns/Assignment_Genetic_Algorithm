@@ -3,6 +3,9 @@ body {
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-attachment: fixed;
+	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
+	font-weight: 300;
+
 }
 
 h1 {
@@ -11,7 +14,8 @@ h1 {
 }
 
 h2 {
-	color: white;
+	margin-top: 0;
+	margin-bottom: 5px;
 }
 
 p {
@@ -20,8 +24,16 @@ p {
 }
 
 ul {
-	color: white;
 	list-style: none;
+	margin-top: 0;
+	padding-left: 0;
+	margin-left: 0;
+}
+
+li {
+	margin-bottom: 5px;
+	padding-left: 0;
+	margin-left: 0; 
 }
 
 canvas {
@@ -34,16 +46,18 @@ canvas {
 }
 
 .key-item {
-	width: 12px;
-	height: 12px;
+	width: 14px;
+	height: 14px;
 	margin-right: 8px;
 	display: inline-block;
-	border: 1px solid white;
 }
 
 #key {
-	width: 600px;
-	margin: auto;
+	width: 250px;
+	margin: 20px auto 0 auto;
+	background-color: white;
+	border-radius: 2px;
+	padding: 5px 0 5px 20px;	
 }
 
 #blue {
