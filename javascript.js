@@ -449,8 +449,8 @@ function Monster (locationX, locationY) {
 			monsters_location_array[this.locationX][this.locationY] = 0;
 			monsters_location_array[this.locationX-1][this.locationY] = 1;
 			this.locationX--;
-
 		}
+		collision_check(this.locationX,this.locationY);
 	}
 
 	this.select_action = function () {
@@ -472,6 +472,27 @@ var collision_check = function (x,y) {
 		}
 	}
 };
+
+var step_creatures = function () {
+
+	// Move every creature
+	for (var i=0; i<creatures_array.length; i++) {
+		creatures_array[i].select_action();
+	}
+
+	// Check for collisions:
+	for (var i=0; i<monsters_array.length; i++) {
+		collision_check(monsters_array[i].locationX, monsters_array[i].locationY);
+	}
+}
+
+var step_monsters = function () {
+	
+	// Move every monster:
+	for (var i=0; i<monsters_array.length; i++) {
+		monsters_array[i].select_action();
+	}
+}
 
 
 /* ---- Draw Everything ---- */
@@ -620,22 +641,10 @@ var initialise = function () {
 };
 
 /* ---- Program Funcitons ---- */
-var reset = function () {
-
-};
-
 var main = function () {
-	render();
-
-	console.log(creatures_array[0].select_action());
-	//console.log(a);
-
-	
-	for (var i=0; i<13; i++) {
-		console.log(creatures_array[0].chromosone[i]);
-	}
-
-	
+	step_creatures();
+	step_monsters();
+	render();		
 	timestep++;
 	if (timestep<=total_frames) {
 		setTimeout(function () {requestAnimationFrame(main);}, 500);
@@ -644,8 +653,8 @@ var main = function () {
 
 
 /* ---- Running the Program ---- */
-reset();
 initialise();
+render();
 main();
 
 /* --------------- Just for my own reference: --------------- */
