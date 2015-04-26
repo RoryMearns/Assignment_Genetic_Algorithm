@@ -3,7 +3,7 @@
 /* ---- World Variables & Data Structures ---- */
 // Timing
 var timestep = 0;					// the 'world clock'
-var total_frames = 10;				// how many times to run the program
+var total_frames = 100;				// how many times to run the program
 var wait;							// how long to wait between timesteps for possible animation
 
 // Drawing
@@ -210,7 +210,7 @@ function Creature (locationX, locationY) {
 		// ...first check the squares immediately adjacent:
 		for (var i=Math.max(this.locationX-1, 0); i<=Math.min(this.locationX+1, creatures_location_array.length-1); i++) {
 			for (var j=Math.max(this.locationY-1, 0); j<=Math.min(this.locationY+1, creatures_location_array.length-1); j++) {
-				if (creatures_location_array[i][j]>0) {
+				if (creatures_location_array[i][j]==1) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -228,7 +228,7 @@ function Creature (locationX, locationY) {
 		// ...if there is nothing immediately adjacent, check the next step out:
 		for (var i=Math.max(this.locationX-2, 0); i<=Math.min(this.locationX+2, creatures_location_array.length-1); i++) {
 			for (var j=Math.max(this.locationY-2, 0); j<=Math.min(this.locationY+2, creatures_location_array.length-1); j++) {
-				if (creatures_location_array[i][j]>0) {
+				if (creatures_location_array[i][j]==1) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -294,6 +294,7 @@ function Creature (locationX, locationY) {
 		else if (food_type == "mushroom") {
 			mushroom_array[this.locationX][this.locationY]--;
 			this.energy_level = 0;
+			creatures_location_array[this.locationX][this.locationY] = 2;
 		}
 	}
 
@@ -314,7 +315,7 @@ function Monster (locationX, locationY) {
 		// ...first check the squares immediately adjacent:
 		for (var i=Math.max(this.locationX-1, 0); i<=Math.min(this.locationX+1, creatures_location_array.length-1); i++) {
 			for (var j=Math.max(this.locationY-1, 0); j<=Math.min(this.locationY+1, creatures_location_array.length-1); j++) {
-				if (creatures_location_array[i][j]>0) {
+				if (creatures_location_array[i][j]==1) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -332,7 +333,7 @@ function Monster (locationX, locationY) {
 		// ...if there is nothing immediately adjacent, check the next step out:
 		for (var i=Math.max(this.locationX-2, 0); i<=Math.min(this.locationX+2, creatures_location_array.length-1); i++) {
 			for (var j=Math.max(this.locationY-2, 0); j<=Math.min(this.locationY+2, creatures_location_array.length-1); j++) {
-				if (creatures_location_array[i][j]>0) {
+				if (creatures_location_array[i][j]==1) {
 					
 					if (i<this.locationX) {
 						return "west";
@@ -350,7 +351,7 @@ function Monster (locationX, locationY) {
 	}
 
 	// Actions:
-	this.move = function () {
+	this.move = function (direction) {
 		var dir = direction;
 
 		// If it's random, assign it to a random direction:
@@ -389,6 +390,18 @@ function Monster (locationX, locationY) {
 	this.select_action = function () {}
 }
 
+/* ---- Look for collisions ---- */
+
+var collision_check = function (x,y) {
+	
+	// If a monster collides with a creature it kills it:
+	for (var i=0; i<creatures_array.length; i++)	{
+		if (creatures_array[i].locationX == x && creatures_array[i].locationY == y) {
+			creatures_array[i].energy_level = 0;
+			creatures_location_array[x][y] = 2;
+		}
+	}
+};
 
 /* ---- Draw Everything ---- */
 var render = function () {
@@ -544,8 +557,10 @@ var main = function () {
 	render();
 
 	//console.log("creatures_array[0].nearest_mushroom()");
-	for (var i=0; i<creatures_array.length; i++) {
-		creatures_array[i].move("random");
+	for (var i=0; i<monsters_array.length; i++) {
+		var dir = monsters_array[i].nearest_creature() ? monsters_array[i].nearest_creature() : "random";
+		monsters_array[i].move(dir);
+		collision_check(monsters_array[i].locationX, monsters_array[i].locationY);
 	}
 
 	
