@@ -3,7 +3,7 @@
 /* ---- World Variables & Data Structures ---- */
 // Timing
 var timestep = 0;					// the 'world clock'
-var total_frames = 0;				// how many times to run the program
+var total_frames = 10;				// how many times to run the program
 var wait;							// how long to wait between timesteps for possible animation
 
 // Drawing
@@ -31,6 +31,7 @@ var chance_of_strawb = 0.03;									// the chance of any one cell containing a 
 var chance_of_mush = 0.03;										// the chance of any one cell containing a mushroom
 var max_strawb = 6;												// the highest number of food any one strawberry tile can contain
 var max_mushroom = 6;											// the highest number of food any one mushroom tile can contain	
+var energy_from_food = 3;
 
 // Creature info:
 var start_energy = 5;											// how much energy each creature starts with
@@ -245,15 +246,57 @@ function Creature (locationX, locationY) {
 	}
 
 	// Actions:
-	this.move = function () {}
+	this.move = function (direction) {
+		var dir = direction;
+
+		// If it's random, assign it to a random direction:
+		if (dir == "random") {
+			dir = default_move_actions[Math.floor(Math.random() * 4) + 1];
+		}
+
+		// Do the corresponding for the directions N, E, S, W:
+		if (dir == "north" && this.locationY > 0) {
+			// Move one block 'south', update: creatures_location_array & this.locationX
+			creatures_location_array[this.locationX][this.locationY] = undefined;
+			creatures_location_array[this.locationX][this.locationY-1] = 1;
+			this.locationY--;
+			this.energy_level--;
+		}
+		else if (dir == "east" && this.locationX < world_width_cells-1) {
+			// Move one block 'east', update: creatures_location_array & this.locationX
+			creatures_location_array[this.locationX][this.locationY] = undefined;
+			creatures_location_array[this.locationX+1][this.locationY] = 1;
+			this.locationX++;
+			this.energy_level--;
+		}
+		else if (dir == "south" && this.locationY < world_height_cells-1) {
+			// Move one block 'south', update: creatures_location_array & this.locationX
+			creatures_location_array[this.locationX][this.locationY] = undefined;
+			creatures_location_array[this.locationX][this.locationY+1] = 1;
+			this.locationY++;
+			this.energy_level--;
+		}
+		else if (dir == "west" && this.locationX > 0) {
+			// Move one block 'west', update: creatures_location_array & this.locationX
+			creatures_location_array[this.locationX][this.locationY] = undefined;
+			creatures_location_array[this.locationX-1][this.locationY] = 1;
+			this.locationX--;
+			this.energy_level--;
+		}
+
+	}
+
 	this.eat = function (food_type) {
 		if (food_type == "strawberry") {
 			strawb_array[this.locationX][this.locationY]--;
+			this.energy_level += energy_from_food;
 		} 
 		else if (food_type == "mushroom") {
 			mushroom_array[this.locationX][this.locationY]--;
+			this.energy_level = 0;
 		}
-	}	
+	}
+
 	this.select_action = function () {}
 }
 
@@ -266,10 +309,82 @@ function Monster (locationX, locationY) {
 	this.locationY = locationY;
 
 	// Sensory Functions:
-	this.nearest_creature = function () {}
+	this.nearest_creature = function () {
+		// Check neighborhood:
+		// ...first check the squares immediately adjacent:
+		for (var i=Math.max(this.locationX-1, 0); i<=Math.min(this.locationX+1, creatures_location_array.length-1); i++) {
+			for (var j=Math.max(this.locationY-1, 0); j<=Math.min(this.locationY+1, creatures_location_array.length-1); j++) {
+				if (creatures_location_array[i][j]>0) {
+					
+					if (i<this.locationX) {
+						return "west";
+					}
+					else if (i>this.locationX) {
+						return "east";
+					}
+					else if (j<this.locationY) {
+						return "north";
+					} else {return "south"}
+
+				}
+			}
+		}
+		// ...if there is nothing immediately adjacent, check the next step out:
+		for (var i=Math.max(this.locationX-2, 0); i<=Math.min(this.locationX+2, creatures_location_array.length-1); i++) {
+			for (var j=Math.max(this.locationY-2, 0); j<=Math.min(this.locationY+2, creatures_location_array.length-1); j++) {
+				if (creatures_location_array[i][j]>0) {
+					
+					if (i<this.locationX) {
+						return "west";
+					}
+					else if (i>this.locationX) {
+						return "east";
+					}
+					else if (j<this.locationY) {
+						return "north";
+					} else {return "south"}
+
+				} else {return false;}
+			}
+		}
+	}
 
 	// Actions:
-	this.move = function () {}
+	this.move = function () {
+		var dir = direction;
+
+		// If it's random, assign it to a random direction:
+		if (dir == "random") {
+			dir = default_move_actions[Math.floor(Math.random() * 4) + 1];
+		}
+
+		// Do the corresponding for the directions N, E, S, W:
+		if (dir == "north" && this.locationY > 0) {
+			// Move one block 'south', update: monsters_location_array & this.locationX
+			monsters_location_array[this.locationX][this.locationY] = undefined;
+			monsters_location_array[this.locationX][this.locationY-1] = 1;
+			this.locationY--;
+		}
+		else if (dir == "east" && this.locationX < world_width_cells-1) {
+			// Move one block 'east', update: monsters_location_array & this.locationX
+			monsters_location_array[this.locationX][this.locationY] = undefined;
+			monsters_location_array[this.locationX+1][this.locationY] = 1;
+			this.locationX++;
+		}
+		else if (dir == "south" && this.locationY < world_height_cells-1) {
+			// Move one block 'south', update: monsters_location_array & this.locationX
+			monsters_location_array[this.locationX][this.locationY] = undefined;
+			monsters_location_array[this.locationX][this.locationY+1] = 1;
+			this.locationY++;
+		}
+		else if (dir == "west" && this.locationX > 0) {
+			// Move one block 'west', update: monsters_location_array & this.locationX
+			monsters_location_array[this.locationX][this.locationY] = undefined;
+			monsters_location_array[this.locationX-1][this.locationY] = 1;
+			this.locationX--;
+
+		}
+	}
 	this.select_action = function () {}
 }
 
@@ -407,15 +522,15 @@ var reset = function () {
 
 var main = function () {
 	render();
-	console.log(creatures_array[0].nearest_mushroom());
-	console.log(creatures_array[1].nearest_mushroom());
-	console.log(creatures_array[2].nearest_mushroom());
-	console.log(creatures_array[3].nearest_mushroom());
-	console.log(creatures_array[4].nearest_mushroom());
+
+	console.log("creatures_array[0].nearest_mushroom()");
+
 
 	
 	timestep++;
-	if (timestep<=total_frames) {requestAnimationFrame(main)}
+	if (timestep<=total_frames) {
+		setTimeout(function () {requestAnimationFrame(main);}, 500;
+	}
 };
 
 
@@ -458,45 +573,6 @@ main();
 			7[6] - default action					- random/north/east/south/west
 			8-13 specify weights for actions 1-6 to determine what to do if multiple actions are activated.
 			*/
-
-// Monsters: Basic 'zombies'. Each monster contains a 'state' (location). Slower than creatures (move once every F timesteps)
-//								They move towards the nearest creature, or at random.
-//				state: location
-//				sense: detect creatures in their local neighbourhood.
-
-
-/* --------------- Data Structures of the World --------------- */
-
-// Strawberry Array: strawb_array, 2D array, each cell contains a number indicating the quantity of food.
-// 			strawberries & mushrooms cannot share the same cell.
-
-// Mushroom Array: mushroom_array, 2D array, each cell contains a number indicating the quantity of food.
-// 			strawberries & mushrooms cannot share the same cell.
-
-// Creatures Array: 1D array of all the 'Creature Objects'. 
-
-// Creatures Location Array: 2D array of the location of all the 'Creature Objects'
-
-// Monsters Array: 1D array of all the 'Monster Objects'.
-
-// Monsters Location Array: 2D array of the location of all the 'Monster Objects'
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
