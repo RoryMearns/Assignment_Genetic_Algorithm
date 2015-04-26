@@ -3,7 +3,7 @@
 /* ---- World Variables & Data Structures ---- */
 // Timing
 var timestep = 0;					// the 'world clock'
-var total_frames = 1;				// how many times to run the program
+var total_frames = 50;				// how many times to run the program
 var wait;							// how long to wait between timesteps for possible animation
 
 // Drawing
@@ -299,6 +299,9 @@ function Creature (locationX, locationY) {
 	}
 
 	this.select_action = function () {
+		
+		if (this.energy_level == 0) {return;}
+
 		this.actions_list = [];
 
 		// Go through all the senses and add any appropriate actions:
@@ -455,9 +458,11 @@ function Monster (locationX, locationY) {
 
 	this.select_action = function () {
 		// Check for any nearby creatures:
-		if (this.nearest_creature != false) {
-			this.move(this.nearest_creature);
-		} else {this.move("random");}
+		if (this.nearest_creature() != false) {
+			this.move(this.nearest_creature());
+		} else {
+			this.move("random");
+		}
 	}
 }
 
