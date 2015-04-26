@@ -4,7 +4,8 @@
 // Timing
 var timestep = 0;					// the 'world clock'
 var total_frames = 50;				// how many times to run the program
-var wait = 100;						// how long to wait between timesteps for possible animation
+var generations = 5;
+var wait = 10;						// how long to wait between timesteps for possible animation
 
 // Drawing
 var world_width_cells = 60;			// world width in number of cells 
@@ -32,7 +33,7 @@ var chance_of_strawb = 0.04;									// the chance of any one cell containing a 
 var chance_of_mush = 0.04;										// the chance of any one cell containing a mushroom
 var max_strawb = 6;												// the highest number of food any one strawberry tile can contain
 var max_mushroom = 6;											// the highest number of food any one mushroom tile can contain	
-var energy_from_food = 10;
+var energy_from_food = 10;										// how much energy is gained from eating food
 
 // Creature info:
 var start_energy = 100;											// how much energy each creature starts with
@@ -55,6 +56,8 @@ function Creature (locationX, locationY) {
 	this.locationX = locationX;
 	this.locationY = locationY;
 	this.energy_level = start_energy;
+	this.fitness_value_normalised = undefined;
+	this.fitness_value_accumulated = undefined;
 	this.actions_list = [];
 
 	// chromosone:
@@ -484,7 +487,7 @@ var step_creatures = function () {
 	for (var i=0; i<monsters_array.length; i++) {
 		collision_check(monsters_array[i].locationX, monsters_array[i].locationY);
 	}
-}
+};
 
 var step_monsters = function () {
 	
@@ -492,20 +495,37 @@ var step_monsters = function () {
 	for (var i=0; i<monsters_array.length; i++) {
 		monsters_array[i].select_action();
 	}
-}
+};
 
-var cloneObject = function (source) {
+var clone_object = function (source) {
 
 	// needed to clone arrays insted of just copying the reference to them:
     for (i in source) {
         if (typeof source[i] == 'source') {
-            this[i] = new cloneObject(source[i]);
+            this[i] = new clone_object(source[i]);
         }
         else{
             this[i] = source[i];
 		}
     }
-}
+};
+
+var assign_fitness = function () {
+	
+	// First get the sum:
+	var sum = 0;
+	for (var i=0; i<creatures_array.length; i++) {
+		sum += creatures_array[i].energy_level;
+	}
+
+	// Then assign the fitness_value_normalised and calculate the fitness_value_accumulated:
+	var accumulation = 0;
+	for (var i=0; i<creatures_array.length; i++) {
+		creatures_array[i].fitness_value_normalised = creatures_array[i].energy_level/sum;
+		accumulation += creatures_array[i].fitness_value_normalised;
+		creatures_array[i].fitness_value_accumulated = accumulation;
+	}
+};
 
 /* ---- Draw Everything ---- */
 var render = function () {
@@ -575,7 +595,6 @@ var render = function () {
 			}
 		}
 	}
-
 };
 
 
@@ -652,6 +671,7 @@ var initialise = function () {
 	}
 };
 
+
 /* ---- Program Funcitons ---- */
 var main = function () {
 	
@@ -670,7 +690,8 @@ var main = function () {
 		setTimeout(function () {requestAnimationFrame(main);}, wait);
 	} else {
 		creatures_array.sort(function(obj1, obj2) {return obj2.energy_level - obj1.energy_level;});
-		previous_creatures_array = new cloneObject(creatures_array);
+		assign_fitness();
+		previous_creatures_array = new clone_object(creatures_array);
 	}
 };
 
