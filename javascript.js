@@ -257,28 +257,28 @@ function Creature (locationX, locationY) {
 		// Do the corresponding for the directions N, E, S, W:
 		if (dir == "north" && this.locationY > 0) {
 			// Move one block 'south', update: creatures_location_array & this.locationX
-			creatures_location_array[this.locationX][this.locationY] = undefined;
+			creatures_location_array[this.locationX][this.locationY] = 0;
 			creatures_location_array[this.locationX][this.locationY-1] = 1;
 			this.locationY--;
 			this.energy_level--;
 		}
 		else if (dir == "east" && this.locationX < world_width_cells-1) {
 			// Move one block 'east', update: creatures_location_array & this.locationX
-			creatures_location_array[this.locationX][this.locationY] = undefined;
+			creatures_location_array[this.locationX][this.locationY] = 0;
 			creatures_location_array[this.locationX+1][this.locationY] = 1;
 			this.locationX++;
 			this.energy_level--;
 		}
 		else if (dir == "south" && this.locationY < world_height_cells-1) {
 			// Move one block 'south', update: creatures_location_array & this.locationX
-			creatures_location_array[this.locationX][this.locationY] = undefined;
+			creatures_location_array[this.locationX][this.locationY] = 0;
 			creatures_location_array[this.locationX][this.locationY+1] = 1;
 			this.locationY++;
 			this.energy_level--;
 		}
 		else if (dir == "west" && this.locationX > 0) {
 			// Move one block 'west', update: creatures_location_array & this.locationX
-			creatures_location_array[this.locationX][this.locationY] = undefined;
+			creatures_location_array[this.locationX][this.locationY] = 0;
 			creatures_location_array[this.locationX-1][this.locationY] = 1;
 			this.locationX--;
 			this.energy_level--;
@@ -361,36 +361,54 @@ function Monster (locationX, locationY) {
 		// Do the corresponding for the directions N, E, S, W:
 		if (dir == "north" && this.locationY > 0) {
 			// Move one block 'south', update: monsters_location_array & this.locationX
-			monsters_location_array[this.locationX][this.locationY] = undefined;
+			monsters_location_array[this.locationX][this.locationY] = 0;
 			monsters_location_array[this.locationX][this.locationY-1] = 1;
 			this.locationY--;
 		}
 		else if (dir == "east" && this.locationX < world_width_cells-1) {
 			// Move one block 'east', update: monsters_location_array & this.locationX
-			monsters_location_array[this.locationX][this.locationY] = undefined;
+			monsters_location_array[this.locationX][this.locationY] = 0;
 			monsters_location_array[this.locationX+1][this.locationY] = 1;
 			this.locationX++;
 		}
 		else if (dir == "south" && this.locationY < world_height_cells-1) {
 			// Move one block 'south', update: monsters_location_array & this.locationX
-			monsters_location_array[this.locationX][this.locationY] = undefined;
+			monsters_location_array[this.locationX][this.locationY] = 0;
 			monsters_location_array[this.locationX][this.locationY+1] = 1;
 			this.locationY++;
 		}
 		else if (dir == "west" && this.locationX > 0) {
 			// Move one block 'west', update: monsters_location_array & this.locationX
-			monsters_location_array[this.locationX][this.locationY] = undefined;
+			monsters_location_array[this.locationX][this.locationY] = 0;
 			monsters_location_array[this.locationX-1][this.locationY] = 1;
 			this.locationX--;
 
 		}
 	}
+
 	this.select_action = function () {}
 }
 
 
 /* ---- Draw Everything ---- */
 var render = function () {
+
+	// If something has moved, remove the rectange:
+	for (var i=0; i<world_width_cells; i++) {
+		for (var j=0; j<world_height_cells; j++) {
+			var x = i*block_size;
+			var y = j*block_size;
+
+			if (creatures_location_array[i][j] == 0) {
+				ctx.clearRect(x, y, block_size, block_size);
+				creatures_location_array[i][j] = undefined;
+			}
+			if (monsters_location_array[i][j] == 0) {
+				ctx.clearRect(x, y, block_size, block_size);
+				monsters_location_array[i][j] = undefined;
+			}
+		}
+	}
 
 	// draw the strawberry & mushroom map:
 	for (var i=0; i<world_width_cells; i++) {
@@ -423,6 +441,8 @@ var render = function () {
 				ctx.fillStyle = dead_creature_color;
 				ctx.fillRect(x, y, block_size, block_size);
 			}
+
+
 		}
 	}
 
@@ -523,13 +543,15 @@ var reset = function () {
 var main = function () {
 	render();
 
-	console.log("creatures_array[0].nearest_mushroom()");
-
+	//console.log("creatures_array[0].nearest_mushroom()");
+	for (var i=0; i<creatures_array.length; i++) {
+		creatures_array[i].move("random");
+	}
 
 	
 	timestep++;
 	if (timestep<=total_frames) {
-		setTimeout(function () {requestAnimationFrame(main);}, 500;
+		setTimeout(function () {requestAnimationFrame(main);}, 500);
 	}
 };
 
