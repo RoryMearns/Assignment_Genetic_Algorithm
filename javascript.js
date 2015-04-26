@@ -21,20 +21,20 @@ var mushroom_color = "#8F6353";		// color of mushrooms: brown
 // Data
 var strawb_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
 var mushroom_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
-var num_creatures = 5;											// number of creatures in the world
+var num_creatures = 10;											// number of creatures in the world
 var creatures_array = new Array(num_creatures);					// 1D array of all the creatures
 var creatures_location_array = new Array(world_width_cells);	// 2D array of all the creatures locations
-var num_monsters = 1;											// number of monsters in the world
+var num_monsters = 6;											// number of monsters in the world
 var monsters_array = new Array(num_monsters);					// 1D array of all the monsters
 var monsters_location_array = new Array(world_width_cells);		// 2D array of all the monsters locations
 var chance_of_strawb = 0.03;									// the chance of any one cell containing a strawberry
 var chance_of_mush = 0.03;										// the chance of any one cell containing a mushroom
 var max_strawb = 6;												// the highest number of food any one strawberry tile can contain
 var max_mushroom = 6;											// the highest number of food any one mushroom tile can contain	
-var energy_from_food = 3;
+var energy_from_food = 10;
 
 // Creature info:
-var start_energy = 5;											// how much energy each creature starts with
+var start_energy = 50;											// how much energy each creature starts with
 var eat_actions = ["eat","ignore"];								// for building the chromosones
 var move_actions = ["towards", "away_from", "random", "ignore"];			// for building the chromosones
 var default_move_actions = ["random", "north", "east", "south", "west"];	// for building the chromosones
@@ -101,7 +101,6 @@ function Creature (locationX, locationY) {
 					else if (j<this.locationY) {
 						return "north";
 					} else {return "south"}
-
 				}
 			}
 		}
@@ -119,10 +118,10 @@ function Creature (locationX, locationY) {
 					else if (j<this.locationY) {
 						return "north";
 					} else {return "south"}
-
-				} else {return false;}
+				}
 			}
 		}
+		return false;
 	}
 
 	this.nearest_mushroom = function () {
@@ -141,7 +140,6 @@ function Creature (locationX, locationY) {
 					else if (j<this.locationY) {
 						return "north";
 					} else {return "south"}
-
 				}
 			}
 		}
@@ -159,10 +157,10 @@ function Creature (locationX, locationY) {
 					else if (j<this.locationY) {
 						return "north";
 					} else {return "south"}
-
-				} else {return false;}
+				}
 			}
 		}
+		return false;
 	}
 	
 	this.nearest_monster = function () {
@@ -181,7 +179,6 @@ function Creature (locationX, locationY) {
 					else if (j<this.locationY) {
 						return "north";
 					} else {return "south"}
-
 				}
 			}
 		}
@@ -199,10 +196,10 @@ function Creature (locationX, locationY) {
 					else if (j<this.locationY) {
 						return "north";
 					} else {return "south"}
-
-				} else {return false;}
+				}
 			}
 		}
+		return false;
 	}
 
 	this.nearest_creature = function () {
@@ -221,7 +218,6 @@ function Creature (locationX, locationY) {
 					else if (j<this.locationY) {
 						return "north";
 					} else {return "south"}
-
 				}
 			}
 		}
@@ -239,10 +235,10 @@ function Creature (locationX, locationY) {
 					else if (j<this.locationY) {
 						return "north";
 					} else {return "south"}
-
-				} else {return false;}
+				}
 			}
 		}
+		return false;
 	}
 
 	// Actions:
@@ -305,11 +301,11 @@ function Creature (locationX, locationY) {
 		this.actions_list = [];
 
 		// Go through all the senses and add any appropriate actions:
-		if (this.strawb_present()) {
-			this.actions_list.push(["eat_actions", this.chromosone[0], this.chromosone[7]], "strawb");
+		if (this.strawb_present()!= false && this.chromosone[0] != "ignore") {
+			this.actions_list.push(["eat_actions", this.chromosone[0], this.chromosone[7], "strawb"]);
 		}
-		if (this.mushroom_present()) {
-			this.actions_list.push(["eat_actions", this.chromosone[1], this.chromosone[8]], "mushroom")
+		if (this.mushroom_present() != false && this.chromosone[1] != "ignore") {
+			this.actions_list.push(["eat_actions", this.chromosone[1], this.chromosone[8], "mushroom"]);
 		}
 		if (this.nearest_strawb() != false && this.chromosone[2] != "ignore") {
 			this.actions_list.push(["move_actions", this.chromosone[2], this.chromosone[9], this.nearest_strawb()]);
@@ -320,7 +316,7 @@ function Creature (locationX, locationY) {
 		if (this.nearest_monster() != false && this.chromosone[4] != "ignore") {
 			this.actions_list.push(["move_actions", this.chromosone[4], this.chromosone[11], this.nearest_monster()]);
 		}
-		if (this.nearest_creature() != false && this.chromosone[4] != "ignore") {
+		if (this.nearest_creature() != false && this.chromosone[5] != "ignore") {
 			this.actions_list.push(["move_actions", this.chromosone[5], this.chromosone[12], this.nearest_creature()]);
 		}
 
@@ -395,7 +391,6 @@ function Monster (locationX, locationY) {
 					else if (j<this.locationY) {
 						return "north";
 					} else {return "south"}
-
 				}
 			}
 		}
@@ -413,7 +408,6 @@ function Monster (locationX, locationY) {
 					else if (j<this.locationY) {
 						return "north";
 					} else {return "south"}
-
 				}
 			}
 		}
@@ -649,18 +643,18 @@ var initialise = function () {
 /* ---- Program Funcitons ---- */
 var main = function () {
 	
-	if (timestep == 0) {
-	creatures_array[0].locationX = 5;
-	creatures_array[0].locationY = 5;
-	creatures_location_array[5][5] = 1;
+	//if (timestep == 0) {
+	//creatures_array[0].locationX = 5;
+	//creatures_array[0].locationY = 5;
+	//creatures_location_array[5][5] = 1;
 
-	monsters_array[0].locationX = 3;
-	monsters_array[0].locationY = 3;
-	monsters_location_array[3][3] = 1;
-	}
-	render();
+	//monsters_array[0].locationX = 3;
+	//monsters_array[0].locationY = 3;
+	//monsters_location_array[3][3] = 1;
+	//}
+	//render();
 
-	//step_creatures();
+	step_creatures();
 	step_monsters();
 	render();		
 	timestep++;
