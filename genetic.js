@@ -5,7 +5,7 @@
 var timestep = 0;					// the 'world clock'
 var total_frames = 50;				// how many steps in a generation
 var generation_clock = 0;			// keep track of the generation
-var generations = 5;				// how many generations to run
+var generations = 1;				// how many generations to run
 var wait = 10;						// how long to wait between timesteps for possible animation
 
 // Drawing
@@ -528,19 +528,6 @@ var assign_fitness = function () {
 	}
 };
 
-var select_parent = function () {
-	
-	// Get a random number:
-	var rand = Math.random();
-
-	// Retrun the first creature that has an accumulated normalized value greater than rand:
-	for (var i=0; i<previous_creatures_array.length; i++) {
-		if (previous_creatures_array[i].fitness_value_accumulated>rand) {
-			return previous_creatures_array[i];
-		}
-	}
-};
-
 var create_offspring = function () {
 	// My implimentation of this first creates a whole new generation of random creatures then
 	//	'edits' their chromosomes based on their parents.
@@ -548,10 +535,10 @@ var create_offspring = function () {
 	for (var i=0; i<creatures_array.length; i++) {
 		
 		// First find two DIFFERENT parents:
-		var parent_1 = select_parent();
-		var parent_2 = select_parent();
+		var parent_1 = find_parent();
+		var parent_2 = find_parent();
 		while (parent_1 == parent_2) {
-			parent_2 = select_parent();
+			parent_2 = find_parent();
 		}
 
 		// Then assign the chromosomes from the two different parents:
@@ -570,6 +557,19 @@ var create_offspring = function () {
 		creatures_array[i].chromosone[10] = parent_2.chromosone[10];
 		creatures_array[i].chromosone[11] = parent_1.chromosone[11];
 		creatures_array[i].chromosone[12] = parent_2.chromosone[12];
+	}
+};
+
+var find_parent = function () {
+	
+	var r = Math.random();
+	for (var j=0; j<num_creatures; j++) {
+		var fit = previous_creatures_array[j].fitness_value_accumulated;
+		if (fit>r) {
+			console.log("Here is j: " + j);
+			return previous_creatures_array[j];
+		}
+
 	}
 };
 
@@ -734,12 +734,25 @@ var main = function () {
 	// Loop if we are not at the end of the generation, otherwise sort the creatures_array:
 	if (timestep<=total_frames) {
 		setTimeout(function () {requestAnimationFrame(main);}, wait);
-	} else if timestep == total_frames && {
+	} 
+	else if (timestep > total_frames && generation_clock <= generations){
+		console.log("here!");
+
+		// Sort the creatures array and assign their fitness:
 		creatures_array.sort(function(obj1, obj2) {return obj2.energy_level - obj1.energy_level;});
 		assign_fitness();
 		previous_creatures_array = new clone_object(creatures_array);
 
-	}
+		// Set up a new world for the next generation:
+		initialise();
+		create_offspring();
+		render();
+		//generations++;
+		//timestep = 0;
+
+		//setTimeout(function () {requestAnimationFrame(main);}, wait);
+
+	} else {console.log("finished");}
 };
 
 
