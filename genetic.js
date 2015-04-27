@@ -5,8 +5,8 @@
 var timestep = 0;					// the 'world clock'
 var total_frames = 50;				// how many steps in a generation
 var generation_clock = 0;			// keep track of the generation
-var generations = 15;				// how many generations to run
-var wait = 10;						// how long to wait between timesteps for possible animation
+var generations = 5;				// how many generations to run
+var wait = 150;						// how long to wait between timesteps for possible animation
 
 // Drawing
 var world_width_cells = 60;			// world width in number of cells 
@@ -23,11 +23,11 @@ var mushroom_color = "#8F6353";		// color of mushrooms: brown
 // Data
 var strawb_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
 var mushroom_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
-var num_creatures = 40;											// number of creatures in the world
+var num_creatures = 50;											// number of creatures in the world
 var creatures_array = new Array(num_creatures);					// 1D array of all the creatures
 var previous_creatures_array = new Array(num_creatures);		// Store the previous generation in
 var creatures_location_array = new Array(world_width_cells);	// 2D array of all the creatures locations
-var num_monsters = 20;											// number of monsters in the world
+var num_monsters = 15;											// number of monsters in the world
 var monsters_array = new Array(num_monsters);					// 1D array of all the monsters
 var monsters_location_array = new Array(world_width_cells);		// 2D array of all the monsters locations
 var chance_of_strawb = 0.04;									// the chance of any one cell containing a strawberry
@@ -559,7 +559,7 @@ var create_offspring = function () {
 		creatures_array[i].chromosone[12] = parent_2.chromosone[12];
 	
 		// With a chance of 1 in 100:
-		if ((Math.floor(Math.random() * 100) + 1) == 10) {
+		if ((Math.floor(Math.random() * 99) + 1) == 5) {
 		
 		// Cause a mutation 
 		var r = Math.floor(Math.random() * 12);
@@ -606,9 +606,6 @@ var create_offspring = function () {
 			}
 		}
 	}
-
-	
-
 };
 
 var find_parent = function () {
@@ -697,7 +694,15 @@ var render = function () {
 
 /* ---- Initialise Everything ---- */
 var initialise = function () {
-	
+	// Clear Arrays for Rendering:
+	creatures_location_array = new Array(world_width_cells);
+	monsters_location_array = new Array(world_width_cells);
+	strawb_array = new Array(world_width_cells);
+	mushroom_array = new Array(world_width_cells);
+
+	// Clear canvas:
+	ctx.clearRect (0 , 0, world_width_pixels, world_height_pixels);
+
 	// fill strawberry & mushroom array:
 	for (var i=0; i<world_width_cells; i++) {
 		strawb_array[i] = new Array(world_height_cells);
@@ -760,7 +765,7 @@ var initialise = function () {
 		for (var j=0; j<creatures_array.length; j++) {
 
 			if (monsters_array[i].locationX == creatures_array[j].locationX && monsters_array[i].locationY == creatures_array[j].locationY) {
-				console.log("Collision on initialisation! Creature instantly killed");
+				// console.log("Collision on initialisation! Creature instantly killed");
 				creatures_array[j].energy_level = 0;
 				creatures_location_array[creatures_array[j].locationX][creatures_array[j].locationY] == 2;
 			}
@@ -771,7 +776,7 @@ var initialise = function () {
 
 /* ---- Program Funcitons ---- */
 var main = function () {
-	
+
 	// Step creatures every time step:
 	step_creatures();
 
@@ -793,13 +798,14 @@ var main = function () {
 		assign_fitness();
 		previous_creatures_array = new clone_object(creatures_array);
 
-		// Print out the generation and the fitness of each individual:
-		var fitness_string = "Generation " + generation_clock + ": ";
+		// Print out the average population of the generation: 
+		var sum = 0;
 		for (var i=0; i<creatures_array.length; i++) {
-			fitness_string += creatures_array[i].energy_level + ", ";
+			sum += creatures_array[i].energy_level;
 		}
-		console.log(fitness_string + "\n");
-
+		var average = sum/creatures_array.length;
+		console.log("Generation " + generation_clock + "\t" + average);
+		
 		// Set up a new world for the next generation:
 		initialise();
 		create_offspring();
@@ -813,12 +819,14 @@ var main = function () {
 
 		creatures_array.sort(function(obj1, obj2) {return obj2.energy_level - obj1.energy_level;});
 
-		// Print out the last generation and the fitness of each individual:
-		var fitness_string = "Generation " + generation_clock + ": ";
+		// Print out the average population of the generation: 
+		var sum = 0;
 		for (var i=0; i<creatures_array.length; i++) {
-			fitness_string += creatures_array[i].energy_level + ", ";
+			sum += creatures_array[i].energy_level;
 		}
-		console.log(fitness_string + "\n");
+		var average = sum/creatures_array.length;
+		console.log("Generation " + generation_clock + "\t" + average);
+
 		console.log("Finished");
 	}
 };
@@ -828,10 +836,4 @@ var main = function () {
 initialise();
 render();
 main();
-
-
-
-
-
-
 
