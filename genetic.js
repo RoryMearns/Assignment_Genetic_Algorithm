@@ -3,8 +3,9 @@
 /* ---- World Variables & Data Structures ---- */
 // Timing
 var timestep = 0;					// the 'world clock'
-var total_frames = 50;				// how many times to run the program
-var generations = 5;
+var total_frames = 50;				// how many steps in a generation
+var generation_clock = 0;			// keep track of the generation
+var generations = 5;				// how many generations to run
 var wait = 10;						// how long to wait between timesteps for possible animation
 
 // Drawing
@@ -527,6 +528,51 @@ var assign_fitness = function () {
 	}
 };
 
+var select_parent = function () {
+	
+	// Get a random number:
+	var rand = Math.random();
+
+	// Retrun the first creature that has an accumulated normalized value greater than rand:
+	for (var i=0; i<previous_creatures_array.length; i++) {
+		if (previous_creatures_array[i].fitness_value_accumulated>rand) {
+			return previous_creatures_array[i];
+		}
+	}
+};
+
+var create_offspring = function () {
+	// My implimentation of this first creates a whole new generation of random creatures then
+	//	'edits' their chromosomes based on their parents.
+	
+	for (var i=0; i<creatures_array.length; i++) {
+		
+		// First find two DIFFERENT parents:
+		var parent_1 = select_parent();
+		var parent_2 = select_parent();
+		while (parent_1 == parent_2) {
+			parent_2 = select_parent();
+		}
+
+		// Then assign the chromosomes from the two different parents:
+		// Note if a given 'ACTION' is taken from parent_1, that actions associated
+		//	'WEIGHT' is also taken from the same parent:
+		creatures_array[i].chromosone[0] = parent_1.chromosone[0];
+		creatures_array[i].chromosone[1] = parent_2.chromosone[1];
+		creatures_array[i].chromosone[2] = parent_1.chromosone[2];
+		creatures_array[i].chromosone[3] = parent_2.chromosone[3];
+		creatures_array[i].chromosone[4] = parent_1.chromosone[4];
+		creatures_array[i].chromosone[5] = parent_2.chromosone[5];
+		creatures_array[i].chromosone[6] = parent_1.chromosone[6];
+		creatures_array[i].chromosone[7] = parent_1.chromosone[7];
+		creatures_array[i].chromosone[8] = parent_2.chromosone[8];
+		creatures_array[i].chromosone[9] = parent_1.chromosone[9];
+		creatures_array[i].chromosone[10] = parent_2.chromosone[10];
+		creatures_array[i].chromosone[11] = parent_1.chromosone[11];
+		creatures_array[i].chromosone[12] = parent_2.chromosone[12];
+	}
+};
+
 /* ---- Draw Everything ---- */
 var render = function () {
 
@@ -688,10 +734,11 @@ var main = function () {
 	// Loop if we are not at the end of the generation, otherwise sort the creatures_array:
 	if (timestep<=total_frames) {
 		setTimeout(function () {requestAnimationFrame(main);}, wait);
-	} else {
+	} else if timestep == total_frames && {
 		creatures_array.sort(function(obj1, obj2) {return obj2.energy_level - obj1.energy_level;});
 		assign_fitness();
 		previous_creatures_array = new clone_object(creatures_array);
+
 	}
 };
 
