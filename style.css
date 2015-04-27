@@ -1,15 +1,11 @@
 body {
-	background-image: url(images/background.jpg);
-	background-repeat: no-repeat;
-	background-position: center center;
-	background-attachment: fixed;
+	background-color: #E6E6E6;
 	font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif; 
 	font-weight: 300;
 
 }
 
 h1 {
-	color: white;
 	text-align: center;
 }
 
@@ -19,7 +15,6 @@ h2 {
 }
 
 p {
-	color: white;
 	text-align: center;
 }
 
