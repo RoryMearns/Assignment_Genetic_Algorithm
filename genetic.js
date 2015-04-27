@@ -5,7 +5,7 @@
 var timestep = 0;					// the 'world clock'
 var total_frames = 50;				// how many steps in a generation
 var generation_clock = 0;			// keep track of the generation
-var generations = 20;				// how many generations to run
+var generations = 15;				// how many generations to run
 var wait = 10;						// how long to wait between timesteps for possible animation
 
 // Drawing
@@ -23,11 +23,11 @@ var mushroom_color = "#8F6353";		// color of mushrooms: brown
 // Data
 var strawb_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
 var mushroom_array = new Array(world_width_cells);				// 2D location array, each cell contains a number indicating the quantity of food
-var num_creatures = 30;											// number of creatures in the world
+var num_creatures = 40;											// number of creatures in the world
 var creatures_array = new Array(num_creatures);					// 1D array of all the creatures
 var previous_creatures_array = new Array(num_creatures);		// Store the previous generation in
 var creatures_location_array = new Array(world_width_cells);	// 2D array of all the creatures locations
-var num_monsters = 6;											// number of monsters in the world
+var num_monsters = 20;											// number of monsters in the world
 var monsters_array = new Array(num_monsters);					// 1D array of all the monsters
 var monsters_location_array = new Array(world_width_cells);		// 2D array of all the monsters locations
 var chance_of_strawb = 0.04;									// the chance of any one cell containing a strawberry
@@ -557,12 +557,57 @@ var create_offspring = function () {
 		creatures_array[i].chromosone[10] = parent_2.chromosone[10];
 		creatures_array[i].chromosone[11] = parent_1.chromosone[11];
 		creatures_array[i].chromosone[12] = parent_2.chromosone[12];
+	
+		// With a chance of 1 in 100:
+		if ((Math.floor(Math.random() * 100) + 1) == 10) {
+		
+		// Cause a mutation 
+		var r = Math.floor(Math.random() * 12);
+			switch (r) {
+				case 0:
+				creatures_array[i].chromosone[0] = eat_actions[Math.floor(Math.random() * 2)];
+				break;
+				case 1:
+				creatures_array[i].chromosone[1] = eat_actions[Math.floor(Math.random() * 2)];
+				break;
+				case 2:
+				creatures_array[i].chromosone[2] = move_actions[Math.floor(Math.random() * 4)];
+				break;
+				case 3:
+				creatures_array[i].chromosone[3] = move_actions[Math.floor(Math.random() * 4)];
+				break;
+				case 4:
+				creatures_array[i].chromosone[4] = move_actions[Math.floor(Math.random() * 4)];
+				break;
+				case 5:
+				creatures_array[i].chromosone[5] = move_actions[Math.floor(Math.random() * 4)];
+				break;
+				case 6:
+				creatures_array[i].chromosone[6] = default_move_actions[Math.floor(Math.random() * 5)];
+				break;
+				case 7:
+				creatures_array[i].chromosone[7] = Math.floor(Math.random() * 100) + 1;
+				break;
+				case 8:
+				creatures_array[i].chromosone[8] = Math.floor(Math.random() * 100) + 1;
+				break;
+				case 9:
+				creatures_array[i].chromosone[9] = Math.floor(Math.random() * 100) + 1;
+				break;
+				case 10:
+				creatures_array[i].chromosone[10] = Math.floor(Math.random() * 100) + 1;
+				break;
+				case 11:
+				creatures_array[i].chromosone[11] = Math.floor(Math.random() * 100) + 1;
+				break;
+				case 12:
+				creatures_array[i].chromosone[12] = Math.floor(Math.random() * 100) + 1;
+				break;
+			}
+		}
 	}
 
-	// With a chance of 1 in 100:
-	//if ((Math.floor(Math.random() * 100) + 1) == 10) {
-		// Cause a mutation 
-	//}
+	
 
 };
 
