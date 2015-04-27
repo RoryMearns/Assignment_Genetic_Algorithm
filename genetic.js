@@ -5,7 +5,7 @@
 var timestep = 0;					// the 'world clock'
 var total_frames = 50;				// how many steps in a generation
 var generation_clock = 0;			// keep track of the generation
-var generations = 1;				// how many generations to run
+var generations = 20;				// how many generations to run
 var wait = 10;						// how long to wait between timesteps for possible animation
 
 // Drawing
@@ -558,6 +558,12 @@ var create_offspring = function () {
 		creatures_array[i].chromosone[11] = parent_1.chromosone[11];
 		creatures_array[i].chromosone[12] = parent_2.chromosone[12];
 	}
+
+	// With a chance of 1 in 100:
+	//if ((Math.floor(Math.random() * 100) + 1) == 10) {
+		// Cause a mutation 
+	//}
+
 };
 
 var find_parent = function () {
@@ -566,12 +572,12 @@ var find_parent = function () {
 	for (var j=0; j<num_creatures; j++) {
 		var fit = previous_creatures_array[j].fitness_value_accumulated;
 		if (fit>r) {
-			console.log("Here is j: " + j);
 			return previous_creatures_array[j];
 		}
 
 	}
 };
+
 
 /* ---- Draw Everything ---- */
 var render = function () {
@@ -732,27 +738,44 @@ var main = function () {
 	timestep++;
 
 	// Loop if we are not at the end of the generation, otherwise sort the creatures_array:
-	if (timestep<=total_frames) {
+	if (timestep<total_frames) {
 		setTimeout(function () {requestAnimationFrame(main);}, wait);
 	} 
-	else if (timestep > total_frames && generation_clock <= generations){
-		console.log("here!");
+	else if (timestep >= total_frames && generation_clock < generations){
 
 		// Sort the creatures array and assign their fitness:
 		creatures_array.sort(function(obj1, obj2) {return obj2.energy_level - obj1.energy_level;});
 		assign_fitness();
 		previous_creatures_array = new clone_object(creatures_array);
 
+		// Print out the generation and the fitness of each individual:
+		var fitness_string = "Generation " + generation_clock + ": ";
+		for (var i=0; i<creatures_array.length; i++) {
+			fitness_string += creatures_array[i].energy_level + ", ";
+		}
+		console.log(fitness_string + "\n");
+
 		// Set up a new world for the next generation:
 		initialise();
 		create_offspring();
 		render();
-		//generations++;
-		//timestep = 0;
+		generation_clock++;
+		timestep = 0;
 
-		//setTimeout(function () {requestAnimationFrame(main);}, wait);
+		setTimeout(function () {requestAnimationFrame(main);}, wait);
 
-	} else {console.log("finished");}
+	} else {
+
+		creatures_array.sort(function(obj1, obj2) {return obj2.energy_level - obj1.energy_level;});
+
+		// Print out the last generation and the fitness of each individual:
+		var fitness_string = "Generation " + generation_clock + ": ";
+		for (var i=0; i<creatures_array.length; i++) {
+			fitness_string += creatures_array[i].energy_level + ", ";
+		}
+		console.log(fitness_string + "\n");
+		console.log("Finished");
+	}
 };
 
 
