@@ -5,7 +5,7 @@
 var timestep = 0;					// the 'world clock'
 var total_frames = 50;				// how many steps in a generation
 var generation_clock = 0;			// keep track of the generation
-var generations = 5;				// how many generations to run
+var generations = 50;				// how many generations to run
 var wait = 0;						// how long to wait between timesteps for possible animation
 
 // Drawing
