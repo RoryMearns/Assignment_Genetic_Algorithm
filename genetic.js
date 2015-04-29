@@ -43,9 +43,9 @@ var move_actions = ["towards", "away_from", "random", "ignore"];			// for buildi
 var default_move_actions = ["random", "north", "east", "south", "west"];	// for building the chromosones
 
 // Canvas
-var canvas = document.createElement("canvas");
-var ctx = canvas.getContext("2d");
-canvas.width = world_width_pixels;
+var canvas = document.createElement("canvas");					// Create the Canvas element
+var ctx = canvas.getContext("2d");	
+canvas.width = world_width_pixels;								// Set the Canvas size based on the size of the world
 canvas.height = world_height_pixels;
 document.body.appendChild(canvas);
 
@@ -791,7 +791,7 @@ var main = function () {
 	if (timestep<total_frames) {
 		setTimeout(function () {requestAnimationFrame(main);}, wait);
 	} 
-	else if (timestep >= total_frames && generation_clock < generations){
+	else if (timestep >= total_frames && generation_clock < generations){ 	// What to do at the end of each generation:
 
 		// Sort the creatures array and assign their fitness:
 		creatures_array.sort(function(obj1, obj2) {return obj2.energy_level - obj1.energy_level;});
@@ -813,9 +813,10 @@ var main = function () {
 		generation_clock++;
 		timestep = 0;
 
+		// Loop back to the start of main
 		setTimeout(function () {requestAnimationFrame(main);}, wait);
 
-	} else {
+	} else {	// If we are at the end of the last generation:
 
 		creatures_array.sort(function(obj1, obj2) {return obj2.energy_level - obj1.energy_level;});
 
@@ -827,13 +828,18 @@ var main = function () {
 		var average = sum/creatures_array.length;
 		console.log("Generation " + generation_clock + "\t" + average);
 
+		// Log out that we are at the end!
 		console.log("Finished");
 	}
 };
 
 
 /* ---- Running the Program ---- */
+// First initialise everything
 initialise();
-render();
-main();
 
+// Then render everything on the screen
+render();
+
+// Then head on in to the main function
+main();
