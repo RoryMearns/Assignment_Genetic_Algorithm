@@ -1,6 +1,6 @@
 # COSC343 Assignment: Genetic Algorithm
 
-For this assignment we were tasked with implementing a genetic algorithm to optimise the fitness of a species of creatures over multiple generations in a simulated two-dimensional world. The world contains: food, poison, monsters (that eat the creatures) and the creatures themselves. The full assignment brief is contained in COSC343_Genetic_Algorithm_Brief.pdf
+For this assignment we were tasked with implementing a genetic algorithm to optimise the fitness of a species of creatures over multiple generations in a simulated two-dimensional world. The world contains: food, poison, monsters (that eat the creatures) and the creatures themselves. The full assignment brief is contained in COSC343_Assignment_Brief.pdf
 
 ##Results & Report
 I created my implementation using JavaScript using the HTML canvas element to graphically represent and animate my results in the browser. The full report of my results is contained in genetic_algorithm_report.pdf
