@@ -370,7 +370,6 @@ function Creature (locationX, locationY) {
 	}
 }
 
-
 /* ---- Monsters ---- */
 function Monster (locationX, locationY) {
 
