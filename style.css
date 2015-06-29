@@ -16,6 +16,11 @@ h2 {
 	margin-bottom: 5px;
 }
 
+h3 {
+	text-align: center;
+	margin-bottom: 5px;
+}
+
 p {
 	text-align: center;
 }
@@ -34,12 +39,26 @@ li {
 }
 
 canvas {
-	border: white 1px solid;
 	margin-left: auto;
 	margin-right: auto;
 	display: block;
 	background-color: white;
+	border: 1px solid #ccc;
+	box-shadow: 0px 0px 20px #C4C4C4;
 
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+figure {
+	border: 1px solid #ccc;
+	line-height: 0;
+	margin: 10px auto 30px auto;
+	width: 900px;
+	box-shadow: 0px 0px 20px #C4C4C4;
 }
 
 .key-item {
@@ -51,10 +70,12 @@ canvas {
 
 #key {
 	width: 250px;
-	margin: 20px auto 0 auto;
+	margin: 20px auto 40px auto;
 	background-color: white;
 	border-radius: 2px;
 	padding: 5px 0 5px 20px;	
+	border: 1px solid #ccc;
+	box-shadow: 0px 0px 20px #C4C4C4;
 }
 
 #blue {
