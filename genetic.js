@@ -498,19 +498,6 @@ var step_monsters = function () {
 	}
 };
 
-var clone_object = function (source) {
-
-	// needed to clone arrays insted of just copying the reference to them:
-    for (i in source) {
-        if (typeof source[i] == 'source') {
-            this[i] = new clone_object(source[i]);
-        }
-        else{
-            this[i] = source[i];
-		}
-    }
-};
-
 var assign_fitness = function () {
 	
 	// First get the sum:
@@ -537,8 +524,11 @@ var create_offspring = function () {
 		// First find two DIFFERENT parents:
 		var parent_1 = find_parent();
 		var parent_2 = find_parent();
-		while (parent_1 == parent_2) {
-			parent_2 = find_parent();
+		
+		// ***** BUG! ***** If the population fitness bottoms out to 0 then this
+		// becomes an infinate loop, fix by comparing parents by array position!
+		while (parent_1 == parent_2) {		
+			parent_2 = find_parent();		
 		}
 
 		// Then assign the chromosomes from the two different parents:
@@ -609,6 +599,7 @@ var create_offspring = function () {
 };
 
 var find_parent = function () {
+	// Roulette wheel selection:
 	
 	var r = Math.random();
 	for (var j=0; j<num_creatures; j++) {
@@ -616,7 +607,6 @@ var find_parent = function () {
 		if (fit>r) {
 			return previous_creatures_array[j];
 		}
-
 	}
 };
 
@@ -796,7 +786,7 @@ var main = function () {
 		// Sort the creatures array and assign their fitness:
 		creatures_array.sort(function(obj1, obj2) {return obj2.energy_level - obj1.energy_level;});
 		assign_fitness();
-		previous_creatures_array = new clone_object(creatures_array);
+		previous_creatures_array = creatures_array.slice();
 
 		// Print out the average population of the generation: 
 		var sum = 0;
